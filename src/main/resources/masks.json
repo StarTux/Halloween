@@ -1,0 +1,217 @@
+{
+    "lore": [
+        "This is a Halloween Mask.",
+        "Wear it and spook Halloween",
+        "afficionados around spawn."
+    ],
+    "masks": [
+        {
+            "id": "skull",
+            "tag": {
+                "SkullOwner": {
+                    "Id": "c659cdd4-e436-4977-a6a7-d5518ebecfbb",
+                    "Properties": {
+                        "textures": [
+                            {
+                                "Value": "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWFlMzg1NWY5NTJjZDRhMDNjMTQ4YTk0NmUzZjgxMmE1OTU1YWQzNWNiY2I1MjYyN2VhNGFjZDQ3ZDMwODEifX19"
+                            }
+                        ]
+                    },
+                    "Name": "Skull"
+                }
+            }
+        },
+        {
+            "id": "skeleton_girl",
+            "tag": {
+                "SkullOwner": {
+                    "Id": "46fb9b3e-39be-4919-81c4-19d7d421cd49",
+                    "Properties": {
+                        "textures": [
+                            {
+                                "Value": "eyJ0aW1lc3RhbXAiOjE1Mzg3Mzg3OTA2NTAsInByb2ZpbGVJZCI6ImVlZTE0ZDlmMDUwOTQzYzQ4Y2JkNjQ4ZWYwZjUwNDY5IiwicHJvZmlsZU5hbWUiOiJZdWtpaVoiLCJzaWduYXR1cmVSZXF1aXJlZCI6dHJ1ZSwidGV4dHVyZXMiOnsiU0tJTiI6eyJ1cmwiOiJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzUwODVjY2E0YzNhM2FhOGI1NGRkYjE3NGE3NDgxOTg1N2ViZWE2MTkwM2RkMWViZTg0Y2M2ZDQwZTYyMzcyMDcifX19"
+                            }
+                        ]
+                    },
+                    "Name": "Skeleton Girl"
+                }
+            }
+        },
+        {
+            "id": "swamp_monster",
+            "tag": {
+                "SkullOwner": {
+                    "Id": "d764acb0-6623-da55-b3be-40c1873e1dff",
+                    "Properties": {
+                        "textures": [
+                            {
+                                "Value": "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2Q0NjhjYmVmNjg2Y2ZiOTZiOWQ4OGYxM2IyNTQyNDRlZDFhMzI1OWNkM2JjNWZmZWE4NDBjZjlhNmQ2ODliIn19fQ\u003d\u003d"
+                            }
+                        ]
+                    },
+                    "Name": "Swamp Monster"
+                }
+            }
+        },
+        {
+            "id": "scarecros",
+            "tag": {
+                "SkullOwner": {
+                    "Id": "3ee188a6-2c6a-4c26-98a5-d655d4eed50f",
+                    "Properties": {
+                        "textures": [
+                            {
+                                "Value": "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTE3MWJhYTVhZDE2N2JkMzNlNDE5ZmU3NDVmN2IwMTg0MGNiNmQ3ZThkN2FlYzZjZGEzMWNlMmQ1Y2Y2MSJ9fX0\u003d"
+                            }
+                        ]
+                    },
+                    "Name": "Scarecrow"
+                }
+            }
+        },
+        {
+            "id": "jack_o_lantern",
+            "tag": {
+                "SkullOwner": {
+                    "Id": "86c0c0e3-a995-bc04-35bd-2b45b0357150",
+                    "Properties": {
+                        "textures": [
+                            {
+                                "Value": "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDE0NGFhYzJhMmE0NTkyNzdiMjBkMGY0MmM1ZThiNWY2NjVjZGRiZWVkNmFiNmViMThmMGQ5MjJhNDZkZTM5MiJ9fX0\u003d"
+                            }
+                        ]
+                    },
+                    "Name": "Jack O\u0027Lantern"
+                }
+            }
+        },
+        {
+            "id": "orc_wizard",
+            "tag": {
+                "SkullOwner": {
+                    "Id": "aa9cfe76-e245-4e2b-9ee1-dc78e3b02137",
+                    "Properties": {
+                        "textures": [
+                            {
+                                "Value": "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNWIzMWEzYjBlMjFlMjY1MDQ2NjljM2VlYmM4M2ViMjY2YWVmZGQ0NTZlN2UxZTQ3ZTM0MmQ5N2YwYmZhZjkifX19"
+                            }
+                        ]
+                    },
+                    "Name": "Orc Wizard"
+                }
+            }
+        },
+        {
+            "id": "ghost",
+            "tag": {
+                "SkullOwner": {
+                    "Id": "31152fb2-cb1e-45c3-86dd-b23f7a20a6f8",
+                    "Properties": {
+                        "textures": [
+                            {
+                                "Value": "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjhkMjE4MzY0MDIxOGFiMzMwYWM1NmQyYWFiN2UyOWE5NzkwYTU0NWY2OTE2MTllMzg1NzhlYTRhNjlhZTBiNiJ9fX0\u003d"
+                            }
+                        ]
+                    },
+                    "Name": "Ghost"
+                }
+            }
+        },
+        {
+            "id": "werewolf",
+            "tag": {
+                "SkullOwner": {
+                    "Id": "1bdb0d0f-6778-460d-8d15-7e35fecc5182",
+                    "Properties": {
+                        "textures": [
+                            {
+                                "Value": "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDI3OThjZDA4ZDJiODhlMDlhNGJkNjhlY2E2MzNkN2YzYzMzZGE0NDJiM2M4NzI1MWNkZTlmN2Q4NzM1NiJ9fX0\u003d"
+                            }
+                        ]
+                    },
+                    "Name": "Werewolf"
+                }
+            }
+        },
+        {
+            "id": "goblin",
+            "tag": {
+                "SkullOwner": {
+                    "Id": "ba4eb146-5558-4893-ad7b-f87635dd69f6",
+                    "Properties": {
+                        "textures": [
+                            {
+                                "Value": "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGJmNTZjNjU0MWMxMjY2ZmZjNDYzNTEwYmRiNTVhZWY5MzE1YWY1NDg4OThjZjVkM2NiYTFiNWI0YzAxIn19fQ\u003d\u003d"
+                            }
+                        ]
+                    },
+                    "Name": "Goblin"
+                }
+            }
+        },
+        {
+            "id": "orc",
+            "tag": {
+                "SkullOwner": {
+                    "Id": "39fcca39-fa30-4e3b-8a1d-b12ce407747d",
+                    "Properties": {
+                        "textures": [
+                            {
+                                "Value": "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmYyMGE5M2EyMTIxZDk1M2Y5YTdjMDg1ZjYzZWQwYTNjNDlmYTNhZjEyZDljNzBkMjk5NDRiYzRhNmI3ZiJ9fX0\u003d"
+                            }
+                        ]
+                    },
+                    "Name": "Orc"
+                }
+            }
+        },
+        {
+            "id": "dead_wizard",
+            "tag": {
+                "SkullOwner": {
+                    "Id": "9b24272e-9fc2-4972-8818-d5da3c3d44cf",
+                    "Properties": {
+                        "textures": [
+                            {
+                                "Value": "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTZlOTM0NjdhM2EwNzkyMjdmNGE3ZDNlYmE3NjE3NTM2ZGE0OTFiYzJmYzZkNzNlZTM5NjhkM2NmMWE2YTUifX19"
+                            }
+                        ]
+                    },
+                    "Name": "Dead Wizard"
+                }
+            }
+        },
+        {
+            "id": "earth_monster",
+            "tag": {
+                "SkullOwner": {
+                    "Id": "d85b5c59-1d2e-4495-afd6-89cf63aa6100",
+                    "Properties": {
+                        "textures": [
+                            {
+                                "Value": "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZGNkMzY2YzdkOWFhMWY1NWZkODg2YjI3M2ZjMTMwNzRkMjlhZjQ2Mzc2MWMwYTcxYWRjMjFlYWRhYTI3In19fQ\u003d\u003d"
+                            }
+                        ]
+                    },
+                    "Name": "Earth Monster"
+                }
+            }
+        },
+        {
+            "id": "cthulu",
+            "tag": {
+                "SkullOwner": {
+                    "Id": "6b40bea7-165a-4c38-8b92-a3f883247a25",
+                    "Properties": {
+                        "textures": [
+                            {
+                                "Value": "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTM1NTQxNTIzZjE0Yzc4ZDhkZTk4Y2MyOTZjNzk4ZjBiODY3YmE4NTM0NGVkNzdmNmRhZTEyNDU1YTE3NCJ9fX0\u003d"
+                            }
+                        ]
+                    },
+                    "Name": "Sea Monster Cthulhu"
+                }
+            }
+        }
+    ]
+}

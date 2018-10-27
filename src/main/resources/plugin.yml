@@ -1,0 +1,20 @@
+main: com.cavetale.halloween.HalloweenPlugin
+name: Halloween
+version: 0.1
+api-version: 1.13
+description: Halloween
+author: StarTux
+website: https://cavetale.com
+depend: []
+softdepend: []
+commands:
+  halloween:
+    description: Halloween
+    permission: halloween.halloween
+    permission-message: You do not have permission!
+    usage: /<command>
+permissions:
+  halloween.halloween:
+    description: Use /halloween
+    children:
+      halloween.child: true

@@ -24,15 +24,16 @@ final class HalloweenListener implements Listener {
         int slot = ThreadLocalRandom.current().nextInt(event.getInventory().getSize());
         event.getInventory().setItem(slot, plugin.masks.spawnCandy());
         Persistence.PlayerData playerData = this.plugin.persistence.getPlayerData(player);
-        boolean mask = false;
-        if (playerData.getMaskDrop() != null) {
-            mask = true;
+        String mask = playerData.getMaskDrop();
+        if (mask != null) {
             slot = ThreadLocalRandom.current().nextInt(event.getInventory().getSize());
-            event.getInventory().setItem(slot, plugin.masks.spawnMask(playerData.getMaskDrop(), player));
+            event.getInventory().setItem(slot, plugin.masks.spawnMask(mask, player));
             playerData.setMaskDrop(null);
             this.plugin.persistence.save();
             this.plugin.playJingle(player);
             this.plugin.playEffect(player, event.getBlock().getLocation().add(0.5, 1.5, 0.5));
+        } else {
+            mask = null;
         }
         this.plugin.getLogger().info("Spawning Halloween dungeon loot for " + player.getName() + " mask=" + mask);
     }

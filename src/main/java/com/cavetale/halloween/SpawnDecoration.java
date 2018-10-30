@@ -1,6 +1,5 @@
 package com.cavetale.halloween;
 
-import com.cavetale.itemmarker.ItemMarker;
 import com.cavetale.npc.NPC;
 import com.cavetale.npc.NPCPlugin;
 import com.cavetale.npc.PlayerSkin;
@@ -15,17 +14,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 @RequiredArgsConstructor
@@ -69,17 +66,21 @@ final class SpawnDecoration {
         if (world != null && world.isChunkLoaded(ix >> 4, iz >> 4)) {
             Location location = new Location(world, x, y, z, (float)Math.random() * 360.0f, 0.0f);
             String texture, signature;
+            int index = this.treaterIndex++;
             if (treater.name.equals("Collector")) {
                 texture = this.plugin.getConfig().getDefaultSection().getString("Collector.texture");
                 signature = this.plugin.getConfig().getDefaultSection().getString("Collector.signature");
             } else {
                 List<String> keys = new ArrayList<>(this.plugin.getConfig().getDefaultSection().getConfigurationSection("Treater").getKeys(false));
-                String key = keys.get(this.treaterIndex++ % keys.size());
+                String key = keys.get(index % keys.size());
                 texture = this.plugin.getConfig().getDefaultSection().getString("Treater." + key + ".texture");
                 signature = this.plugin.getConfig().getDefaultSection().getString("Treater." + key + ".signature");
             }
             NPC npc = new NPC(NPCPlugin.getInstance(), NPC.Type.PLAYER, location, "%" + treater.name, new PlayerSkin(treater.id, treater.name, texture, signature));
             npc.setHeadYaw((double)location.getYaw());
+            List<String> maskIds = this.plugin.masks.ids();
+            ItemStack mask = this.plugin.masks.spawnMask(maskIds.get(index % maskIds.size()), null);
+            npc.setEquipment(EquipmentSlot.HEAD, mask);
             npc.setRemoveWhenUnwatched(false);
             NPCPlugin.getInstance().enableNPC(npc);
             treater.npc = npc;
@@ -99,7 +100,7 @@ final class SpawnDecoration {
     void enable() {
         this.plugin.saveResource("treaters.json", false);
         try (FileReader reader = new FileReader(new File(this.plugin.getDataFolder(), "treaters.json"))) {
-            this.treaters = new Gson().fromJson(reader, new TypeToken<List<Treater>>() {}.getType());
+            this.treaters = new Gson().fromJson(reader, new TypeToken<List<Treater>>() { }.getType());
             this.plugin.getLogger().info("" + this.treaters.size() + " treaters loaded.");
         } catch (IOException ioe) {
             ioe.printStackTrace();

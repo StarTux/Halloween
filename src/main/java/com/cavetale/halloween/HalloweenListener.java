@@ -69,7 +69,7 @@ final class HalloweenListener implements Listener {
                                                      PotionEffectType.LUCK);
         PotionEffectType pet = types.get(ThreadLocalRandom.current().nextInt(types.size()));
         int amplifier = ThreadLocalRandom.current().nextInt(3);
-        int duration = 20*30 + ThreadLocalRandom.current().nextInt(40*30);
+        int duration = 20 * 30 + ThreadLocalRandom.current().nextInt(40 * 30);
         player.addPotionEffect(new PotionEffect(pet, duration, amplifier));
     }
 }

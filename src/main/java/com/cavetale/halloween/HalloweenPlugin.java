@@ -61,8 +61,6 @@ public final class HalloweenPlugin extends JavaPlugin {
             SpawnDecoration.Treater treater = new SpawnDecoration.Treater();
             treater.name = args[1];
             treater.id = UUID.randomUUID().toString().replace("-", "");
-            treater.texture = "eyJ0aW1lc3RhbXAiOjE1Mzg3Mzg3OTA2NTAsInByb2ZpbGVJZCI6ImVlZTE0ZDlmMDUwOTQzYzQ4Y2JkNjQ4ZWYwZjUwNDY5IiwicHJvZmlsZU5hbWUiOiJZdWtpaVoiLCJzaWduYXR1cmVSZXF1aXJlZCI6dHJ1ZSwidGV4dHVyZXMiOnsiU0tJTiI6eyJ1cmwiOiJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzUwODVjY2E0YzNhM2FhOGI1NGRkYjE3NGE3NDgxOTg1N2ViZWE2MTkwM2RkMWViZTg0Y2M2ZDQwZTYyMzcyMDcifX19";
-            treater.signature = "U2kwNFNomfDPpmNVZHB6GmXlCYrp129VdteKEX3K8nsSZfB27rXMe9LK4vJUaUStArjECSEVjJJSmf7+nt1GsbdeRuj1Q7VMxIjBZcpKsQLns2iFyzNRlSGrpOvv+hE71naaxJDvqcZnyV2CF48PLeDELcOWWQP6aNrxH1NvSG5J1ugQekM8V5+Z49vhSmDdbxHvgmafBUDljNTMF7izqGddXx8vHTutLNevhrlCt37mcWu2LDejMuvNTcN/e8SXC2/qMAcvCHBp3TfG2rq6ZcxtvtFXnYJVE0j20hA4/yozhGY9FuBcTFi5iji9+NPBtJOtL06KYa376LrwLhC07nDvd0H/yPONt4wDBvCLx7IRI/ZESBDvaohXHS+ZT+XSI5WWGViSs/55lMgnQfQ4g+JkyMb/GzbHVJbn5lki4e5UeawmEvqnL/1nl04D5npaSoNOQKmTpfixNoQ7aY5b4cK8cF8ZCzo3hZXY717D6y0AIfQyk6jA9f6n3KJJO1BJxL3kOYyAqwpNeL6y4KZwpvzqieDHwCM78TurdlWDG8u3xksUovihELzBcCAk8UA5+PxzCavwaMo4Y5H7tMcMjGlrz9zPCLSd0VSdageP/y5238k9SZL7gZLb0gSVJwCTrbdzFNHnt6KTFuQmMpqJc/wsW5iEeXDVzvxa6ZC4t2E=";
             treater.location = Arrays.asList(player.getWorld().getName(), player.getLocation().getX(), player.getLocation().getY(), player.getLocation().getZ());
             spawnDecoration.treaters.add(treater);
             spawnDecoration.saveTreaters();

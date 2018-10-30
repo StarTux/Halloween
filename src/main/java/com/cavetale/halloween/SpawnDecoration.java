@@ -34,6 +34,7 @@ final class SpawnDecoration {
     private ArrayList<Floater> floaters = new ArrayList<>();
     List<Treater> treaters = new ArrayList<>();
     private final String worldName = "spawn";
+    int treaterIndex = 0;
 
     @RequiredArgsConstructor
     static class Floater {
@@ -42,7 +43,7 @@ final class SpawnDecoration {
     }
 
     static class Treater {
-        String name, id, texture, signature;
+        String name, id;
         List<Object> location;
         transient NPC npc;
     }
@@ -67,84 +68,22 @@ final class SpawnDecoration {
         int iz = (int)Math.floor(z);
         if (world != null && world.isChunkLoaded(ix >> 4, iz >> 4)) {
             Location location = new Location(world, x, y, z, (float)Math.random() * 360.0f, 0.0f);
-            NPC npc = new NPC(NPCPlugin.getInstance(), NPC.Type.PLAYER, location, "%" + treater.name, new PlayerSkin(treater.id, treater.name, treater.texture, treater.signature));
+            String texture, signature;
+            if (treater.name.equals("Collector")) {
+                texture = this.plugin.getConfig().getDefaultSection().getString("Collector.texture");
+                signature = this.plugin.getConfig().getDefaultSection().getString("Collector.signature");
+            } else {
+                List<String> keys = new ArrayList<>(this.plugin.getConfig().getDefaultSection().getConfigurationSection("Treater").getKeys(false));
+                String key = keys.get(this.treaterIndex++ % keys.size());
+                texture = this.plugin.getConfig().getDefaultSection().getString("Treater." + key + ".texture");
+                signature = this.plugin.getConfig().getDefaultSection().getString("Treater." + key + ".signature");
+            }
+            NPC npc = new NPC(NPCPlugin.getInstance(), NPC.Type.PLAYER, location, "%" + treater.name, new PlayerSkin(treater.id, treater.name, texture, signature));
             npc.setHeadYaw((double)location.getYaw());
             npc.setRemoveWhenUnwatched(false);
             NPCPlugin.getInstance().enableNPC(npc);
             treater.npc = npc;
-            npc.setDelegate(new NPC.Delegate() {
-                    UUID busyWith = null;
-                    int busySince = 0;
-                    int ticksLived = 0;
-                    List<String> dialogueLines;
-                    @Override public void onTick(NPC n) {
-                        if (busyWith != null) {
-                            Player player = Bukkit.getServer().getPlayer(busyWith);
-                            if (player == null
-                                || !player.getWorld().equals(n.getLocation().getWorld())
-                                || player.getLocation().distanceSquared(n.getLocation()) > 256.0) {
-                                busyWith = null;
-                                return;
-                            }
-                            Persistence.PlayerData playerData = plugin.persistence.getPlayerData(player);
-                            if (busySince == 0) {
-                                ItemStack helmet = player.getInventory().getHelmet();
-                                if (helmet != null && ItemMarker.hasCustomId(helmet, Masks.MASK_ITEM_ID) && ItemMarker.isOwner(helmet, busyWith)) {
-                                    String maskName = (String)ItemMarker.getMarker(helmet, Masks.MASK_ID);
-                                    if (maskName == null) maskName = "INVALID";
-                                    if (playerData.didShow(maskName, treater.name)) {
-                                        dialogueLines = new ArrayList<>(Arrays.asList("I hear there are more",
-                                                                                      "masks hidden in dungeons",
-                                                                                      "of the Mining World."));
-                                    } else {
-                                        playerData.setShown(maskName, treater.name);
-                                        dialogueLines = new ArrayList<>(Arrays.asList("Whoa, what a cool mask!",
-                                                                                      "Where did you find that?",
-                                                                                      "Here, have some candy."));
-                                        for (int i = 0; i < 5; i += 1) {
-                                            plugin.masks.spawnCandy(n.getHeadLocation());
-                                        }
-                                        plugin.playJingle(player);
-                                        plugin.playEffect(player, n.getHeadLocation());
-                                        if (playerData.getMaskDrop() == null) {
-                                            playerData.rollMaskDrop(plugin);
-                                        }
-                                        plugin.persistence.save();
-                                    }
-                                } else {
-                                    dialogueLines = new ArrayList<>(Arrays.asList("Rumor has it one can find",
-                                                                                  "the most awesome Halloween",
-                                                                                  "masks in dungeons of the",
-                                                                                  "Mining World.",
-                                                                                  "You can find special",
-                                                                                  "dungeons by using your",
-                                                                                  "compass."));
-                                }
-                            } else if (n.getSpeechBubble() == null || !n.getSpeechBubble().isValid()) {
-                                if (dialogueLines == null || dialogueLines.isEmpty()) {
-                                    busyWith = null;
-                                    dialogueLines = null;
-                                } else {
-                                    String line = dialogueLines.remove(0);
-                                    n.addSpeechBubble(line);
-                                    n.lookAt(player.getEyeLocation());
-                                    player.sendMessage("<" + ChatColor.GOLD + treater.name + ChatColor.WHITE + "> " + ChatColor.GRAY + line);
-                                }
-                            }
-                            busySince += 1;
-                        } else {
-                            if ((ticksLived++ % 100) == 0) {
-                                n.lookRandom();
-                            }
-                        }
-                    }
-                    @Override public boolean onInteract(NPC n, Player p, boolean r) {
-                        if (busyWith != null) return true;
-                        busyWith = p.getUniqueId();
-                        this.busySince = 0;
-                        return true;
-                    }
-                });
+            npc.setDelegate(new TreaterDelegate(plugin, treater));
         }
     }
 

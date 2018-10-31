@@ -17,9 +17,12 @@ public final class HalloweenPlugin extends JavaPlugin {
     Masks masks;
     Persistence persistence;
     HalloweenListener halloweenListener;
+    Collector collector;
 
     @Override
     public void onEnable() {
+        saveDefaultConfig();
+        reloadConfig();
         this.persistence = new Persistence(this);
         this.persistence.load();
         this.spawnDecoration = new SpawnDecoration(this);
@@ -29,6 +32,9 @@ public final class HalloweenPlugin extends JavaPlugin {
         this.halloweenListener = new HalloweenListener(this);
         getServer().getPluginManager().registerEvents(this.halloweenListener, this);
         getServer().getScheduler().runTaskTimer(this, this::tick, 1L, 1L);
+        this.collector = new Collector(this);
+        this.collector.importConfig();
+        getCommand("maskcollector").setExecutor(this.collector);
     }
 
     @Override
@@ -53,6 +59,9 @@ public final class HalloweenPlugin extends JavaPlugin {
                 } else {
                     player.getInventory().addItem(this.masks.spawnMask(args[1], player));
                 }
+            } else if (args.length == 3) {
+                Player target = getServer().getPlayerExact(args[2]);
+                player.getInventory().addItem(this.masks.spawnMask(args[1], target));
             }
             return true;
         }
@@ -70,6 +79,12 @@ public final class HalloweenPlugin extends JavaPlugin {
         case "candy": {
             this.masks.spawnCandy(player.getEyeLocation());
             playJingle(player);
+            return true;
+        }
+        case "reload": {
+            reloadConfig();
+            this.collector.importConfig();
+            sender.sendMessage("config.yml reloaded");
             return true;
         }
         default: return false;
@@ -103,7 +118,33 @@ public final class HalloweenPlugin extends JavaPlugin {
         }.runTaskTimer(this, 4L, 4L);
     }
 
+    void playTalking(final Player player, Location location, int times) {
+        new BukkitRunnable() {
+            int ticks = times;
+            @Override public void run() {
+                if (!player.isValid()) {
+                    cancel();
+                    return;
+                }
+                player.playSound(location, org.bukkit.Sound.ENTITY_VILLAGER_TRADE, 1.0f, 2.0f);
+                if (ticks-- <= 0) cancel();
+            }
+        }.runTaskTimer(this, 5L, 5L);
+    }
+
     void playEffect(final Player player, final Location location) {
         player.spawnParticle(Particle.BUBBLE_POP, location, 20, 0.5, 0.5, 0.5, 0.0);
+    }
+
+    void playFailSound(final Player player, final Location location) {
+        player.playSound(location, Sound.ENTITY_GHAST_SCREAM, SoundCategory.MASTER, 0.5f, 1.5f);
+    }
+
+    void playCompleteSound(final Player player) {
+        player.playSound(player.getEyeLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, SoundCategory.MASTER, 0.5f, 1.5f);
+    }
+
+    void showPortalParticle(final Player player, final Location location) {
+        player.spawnParticle(Particle.END_ROD, location, 5, 0.25, 0.25, 0.25, 0.0);
     }
 }

@@ -39,6 +39,7 @@ final class Masks {
     static class Mask {
         final String id;
         final Map<String, Object> tag;
+        transient String name;
     }
 
     void enable() {
@@ -49,6 +50,10 @@ final class Masks {
         } catch (IOException e) {
             e.printStackTrace();
             this.maskConfig = new MaskConfig();
+        }
+        for (Mask mask: this.maskConfig.masks) {
+            Map map = (Map)mask.tag.get("SkullOwner");
+            mask.name = (String)map.get("Name");
         }
         this.plugin.getLogger().info("" + this.maskConfig.masks.size() + " masks loaded");
     }

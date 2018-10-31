@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -26,16 +27,45 @@ final class TreaterDelegate implements NPC.Delegate {
 
     @Override
     public void onTick(NPC npc) {
-        if (busyWith != null) {
+        ticksLived += 1;
+        if ((ticksLived % 5 == 0) && treater.name.equals("Collector")) {
+            for (NPC.Watcher watcher: npc.getWatchers().values()) {
+                Persistence.PlayerData playerData = plugin.persistence.getPlayerData(watcher.player);
+                if (playerData.collectedAll) {
+                    Block portalBlock = this.plugin.collector.getHalloweenPortal();
+                    if (watcher.player.getLocation().getBlock().equals(portalBlock)) {
+                        watcher.player.teleport(Bukkit.getWorld(this.plugin.collector.getHalloweenWorld()).getSpawnLocation());
+                    } else {
+                        Location loc = portalBlock.getLocation().add(0.25 + Math.random() * 0.5, 0.5 + Math.random() * 1.5, 0.25 + Math.random() * 0.5);
+                        this.plugin.showPortalParticle(watcher.player, loc);
+                    }
+                }
+            }
+        }
+        if (this.busyWith != null) {
             Player player = Bukkit.getServer().getPlayer(busyWith);
             if (player == null
                 || !player.getWorld().equals(npc.getLocation().getWorld())
                 || player.getLocation().distanceSquared(npc.getLocation()) > 256.0) {
-                busyWith = null;
+                this.busyWith = null;
                 return;
             }
             Persistence.PlayerData playerData = plugin.persistence.getPlayerData(player);
-            if (busySince == 0) {
+            if (this.busySince == 0 && this.treater.name.equals("Collector")) {
+                if (playerData.collectedAll) {
+                    this.dialogueLines = new ArrayList<>();
+                    this.dialogueLines.add(Arrays.asList("Enter through the portal, mortal!",
+                                                         "" + ChatColor.GRAY + ChatColor.ITALIC + "heehee!"));
+                } else {
+                    this.dialogueLines = new ArrayList<>();
+                    this.dialogueLines.add(Arrays.asList("Greetings!",
+                                                         "Have you started your own",
+                                                         " mask collection yet?"));
+                    this.dialogueLines.add(Arrays.asList("I will take one of",
+                                                         "each off your hand."));
+                    this.dialogueLines.add(Arrays.asList("You won't regret it, " + ChatColor.ITALIC + "heehee!"));
+                }
+            } else if (this.busySince == 0) {
                 ItemStack helmet = player.getInventory().getHelmet();
                 if (helmet != null && ItemMarker.hasCustomId(helmet, Masks.MASK_ITEM_ID) && ItemMarker.isOwner(helmet, busyWith)) {
                     String maskName = (String)ItemMarker.getMarker(helmet, Masks.MASK_ID);
@@ -47,6 +77,7 @@ final class TreaterDelegate implements NPC.Delegate {
                                                         "of the Mining World."));
                     } else {
                         playerData.setShown(maskName, treater.name);
+                        plugin.persistence.save();
                         dialogueLines = new ArrayList<>();
                         dialogueLines.add(Arrays.asList("Whoa, what a cool mask!",
                                                         "Where did you find that?",
@@ -56,10 +87,6 @@ final class TreaterDelegate implements NPC.Delegate {
                         }
                         plugin.playJingle(player);
                         plugin.playEffect(player, npc.getHeadLocation());
-                        if (playerData.getMaskDrop() == null) {
-                            playerData.rollMaskDrop(plugin);
-                        }
-                        plugin.persistence.save();
                     }
                 } else {
                     dialogueLines = new ArrayList<>();
@@ -74,7 +101,11 @@ final class TreaterDelegate implements NPC.Delegate {
             } else if (npc.getSpeechBubble() == null || !npc.getSpeechBubble().isValid()) {
                 if (dialogueLines == null || dialogueLines.isEmpty()) {
                     busyWith = null;
+                    busySince = 0;
                     dialogueLines = null;
+                    if (this.treater.name.equals("Collector") && !playerData.collectedAll) {
+                        this.plugin.collector.showMaskList(player);
+                    }
                 } else {
                     List<String> lines = dialogueLines.remove(0);
                     StringBuilder sb = new StringBuilder();
@@ -85,7 +116,9 @@ final class TreaterDelegate implements NPC.Delegate {
                         sb.append(" ").append(line);
                     }
                     npc.lookAt(player.getEyeLocation());
-                    player.sendMessage("<" + ChatColor.GOLD + treater.name + ChatColor.WHITE + ">" + ChatColor.LIGHT_PURPLE + sb.toString());
+                    ChatColor nameColor = !this.treater.name.equals("Collector") ? ChatColor.GOLD : ChatColor.DARK_RED;
+                    ChatColor chatColor = !this.treater.name.equals("Collector") ? ChatColor.LIGHT_PURPLE : ChatColor.GRAY;
+                    player.sendMessage("<" + nameColor + treater.name + ChatColor.WHITE + ">" + chatColor + sb.toString());
                     final Location soundLoc = npc.getEyeLocation();
                     new BukkitRunnable() {
                         int count = lines.size() * 3;
@@ -99,7 +132,8 @@ final class TreaterDelegate implements NPC.Delegate {
             }
             busySince += 1;
         } else {
-            if ((ticksLived++ % 20) == 0) {
+            // IDLE
+            if ((ticksLived % 20) == 0) {
                 if (ThreadLocalRandom.current().nextInt(2) == 0) {
                     npc.lookRandom();
                 }
@@ -118,8 +152,8 @@ final class TreaterDelegate implements NPC.Delegate {
 
     @Override
     public boolean onInteract(NPC npc, Player player, boolean right) {
-        if (busyWith != null) return true;
-        busyWith = player.getUniqueId();
+        if (this.busyWith != null) return true;
+        this.busyWith = player.getUniqueId();
         this.busySince = 0;
         return true;
     }

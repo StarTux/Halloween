@@ -31,7 +31,8 @@ final class Persistence {
     @Data
     static class PlayerData {
         String name;
-        String maskDrop = null;
+        int lastX = Integer.MAX_VALUE, lastZ = Integer.MAX_VALUE;
+        boolean collectedAll;
         Set<List<String>> shown = new HashSet<>();
 
         boolean didShow(String maskId, String npcName) {
@@ -42,7 +43,7 @@ final class Persistence {
             shown.add(Arrays.asList(maskId, npcName));
         }
 
-        void rollMaskDrop(HalloweenPlugin pl) {
+        String rollMaskDrop(HalloweenPlugin pl) {
             String mask = null;
             long count = 0;
             List<String> ids = pl.masks.ids();
@@ -54,8 +55,7 @@ final class Persistence {
                     count = maskIdCount;
                 }
             }
-            this.maskDrop = mask;
-            pl.getLogger().info("Rolled " + this.maskDrop + " for " + this.name);
+            return mask;
         }
     }
 
@@ -82,7 +82,6 @@ final class Persistence {
         if (result == null) {
             result = new PlayerData();
             result.name = player.getName();
-            result.rollMaskDrop(this.plugin);
             this.content.players.put(player.getUniqueId(), result);
         }
         return result;

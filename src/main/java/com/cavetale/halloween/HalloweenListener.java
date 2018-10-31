@@ -6,9 +6,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import lombok.RequiredArgsConstructor;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -24,17 +26,18 @@ final class HalloweenListener implements Listener {
         int slot = ThreadLocalRandom.current().nextInt(event.getInventory().getSize());
         event.getInventory().setItem(slot, plugin.masks.spawnCandy());
         Persistence.PlayerData playerData = this.plugin.persistence.getPlayerData(player);
-        String mask = playerData.getMaskDrop();
-        if (mask != null) {
-            slot = ThreadLocalRandom.current().nextInt(event.getInventory().getSize());
-            event.getInventory().setItem(slot, plugin.masks.spawnMask(mask, player));
-            playerData.setMaskDrop(null);
-            this.plugin.persistence.save();
-            this.plugin.playJingle(player);
-            this.plugin.playEffect(player, event.getBlock().getLocation().add(0.5, 1.5, 0.5));
-        } else {
-            mask = null;
+        Block block = event.getBlock();
+        if (Math.abs(block.getX() - playerData.lastX) < 64 && Math.abs(block.getZ() - playerData.lastZ) < 64) {
+            return;
         }
+        playerData.lastX = block.getX();
+        playerData.lastZ = block.getZ();
+        this.plugin.persistence.save();
+        String mask = playerData.rollMaskDrop(this.plugin);
+        slot = ThreadLocalRandom.current().nextInt(event.getInventory().getSize());
+        event.getInventory().setItem(slot, plugin.masks.spawnMask(mask, player));
+        this.plugin.playJingle(player);
+        this.plugin.playEffect(player, event.getBlock().getLocation().add(0.5, 1.5, 0.5));
         this.plugin.getLogger().info("Spawning Halloween dungeon loot for " + player.getName() + " mask=" + mask);
     }
 
@@ -71,5 +74,13 @@ final class HalloweenListener implements Listener {
         int amplifier = ThreadLocalRandom.current().nextInt(3);
         int duration = 20 * 30 + ThreadLocalRandom.current().nextInt(40 * 30);
         player.addPotionEffect(new PotionEffect(pet, duration, amplifier));
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onBlockPlace(BlockPlaceEvent event) {
+        ItemStack item = event.getItemInHand();
+        if (ItemMarker.hasCustomId(item, Masks.MASK_ID)) {
+            event.setCancelled(true);
+        }
     }
 }

@@ -68,13 +68,13 @@ final class SpawnDecoration {
             String texture, signature;
             int index = this.treaterIndex++;
             if (treater.name.equals("Collector")) {
-                texture = this.plugin.getConfig().getDefaultSection().getString("Collector.texture");
-                signature = this.plugin.getConfig().getDefaultSection().getString("Collector.signature");
+                texture = this.plugin.getConfig().getString("Collector.texture");
+                signature = this.plugin.getConfig().getString("Collector.signature");
             } else {
-                List<String> keys = new ArrayList<>(this.plugin.getConfig().getDefaultSection().getConfigurationSection("Treater").getKeys(false));
+                List<String> keys = new ArrayList<>(this.plugin.getConfig().getConfigurationSection("Treater").getKeys(false));
                 String key = keys.get(index % keys.size());
-                texture = this.plugin.getConfig().getDefaultSection().getString("Treater." + key + ".texture");
-                signature = this.plugin.getConfig().getDefaultSection().getString("Treater." + key + ".signature");
+                texture = this.plugin.getConfig().getString("Treater." + key + ".texture");
+                signature = this.plugin.getConfig().getString("Treater." + key + ".signature");
             }
             NPC npc = new NPC(NPCPlugin.getInstance(), NPC.Type.PLAYER, location, "%" + treater.name, new PlayerSkin(treater.id, treater.name, texture, signature));
             npc.setHeadYaw((double)location.getYaw());
@@ -84,7 +84,7 @@ final class SpawnDecoration {
             npc.setRemoveWhenUnwatched(false);
             NPCPlugin.getInstance().enableNPC(npc);
             treater.npc = npc;
-            npc.setDelegate(new TreaterDelegate(plugin, treater));
+            npc.setDelegate(new TreaterDelegate(this.plugin, treater));
         }
     }
 
@@ -145,5 +145,12 @@ final class SpawnDecoration {
         double headYaw = (time * 5.0) % 360.0;
         npc.setLocation(new Location(npc.getLocation().getWorld(), (double)floater.x + 0.5, (double)floater.y + (Math.sin(time * 0.03) * 0.5 + 0.5) * 16.0, (double)floater.z, (float)headYaw, 0.0f));
         npc.setHeadYaw(headYaw);
+    }
+
+    NPC getCollector() {
+        for (Treater treater: treaters) {
+            if (treater.name.equals("Collector")) return treater.npc;
+        }
+        return null;
     }
 }

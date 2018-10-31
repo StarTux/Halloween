@@ -212,6 +212,102 @@
                     "Name": "Sea Monster Cthulhu"
                 }
             }
+        },
+        {
+            "id": "darthvader",
+            "tag": {
+                "SkullOwner": {
+                    "Id": "8d0d9feb-8866-48d5-ab7f-28f4a8947925",
+                    "Properties": {
+                        "textures": [
+                            {
+                                "Value": "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzFjM2UxZjIyNGI0NDZjY2FjNmE2Y2MzY2Q5ODkxMDE5YTEyMmY5OTY5MWMzOTA3OTkyYTNhZjk5YTIxYjAifX19"
+                            }
+                        ]
+                    },
+                    "Name": "Darth Vader"
+                }
+            }
+        },
+        {
+            "id": "guyfawkes",
+            "tag": {
+                "SkullOwner": {
+                    "Id": "c484c19e-45e0-4dff-8500-2e051b8d5521",
+                    "Properties": {
+                        "textures": [
+                            {
+                                "Value": "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTdiOGY5ZTM4MWVlYzZhZjJkNGMzMTZmYzY4ODFhZDYzZDNhYmU0ZTk0OGNmZWVhZWU0ZmM0YzI1ODU1YTEifX19"
+                            }
+                        ]
+                    },
+                    "Name": "Guy Fawkes"
+                }
+            }
+        },
+        {
+            "id": "woodenmask",
+            "tag": {
+                "SkullOwner": {
+                    "Id": "59fd3c8a-7093-4314-b60e-840189c0a2ed",
+                    "Properties": {
+                        "textures": [
+                            {
+                                "Value": "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzk1Y2IxNjVlYzhmYjNmZmIwZTA3MDg4NTExNDkwODM1Y2YzMzFkODdkZjc4YTVkNDE5OTJkODc2MWVjMzYxIn19fQ\u003d\u003d"
+                            }
+                        ]
+                    },
+                    "Name": "Wooden Mask"
+                }
+            }
+        },
+        {
+            "id": "maskedman",
+            "tag": {
+                "SkullOwner": {
+                    "Id": "cbad21b8-89be-4d7a-b8a7-b0c994acb93d",
+                    "Properties": {
+                        "textures": [
+                            {
+                                "Value": "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNWQzYzRhMDhkN2YyYzc2YzFiZjIzZDdhYmU0YjIxYzBkNTY1N2M1Y2FkODNjZDY3M2Y0Y2I0OGE2YmVmOTQifX19"
+                            }
+                        ]
+                    },
+                    "Name": "Masked Man"
+                }
+            }
+        },
+        {
+            "id": "maskedwizard",
+            "tag": {
+                "SkullOwner": {
+                    "Id": "c8fac29a-5874-4cdc-8a52-537438e0fbf7",
+                    "Properties": {
+                        "textures": [
+                            {
+                                "Value": "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzk4NzY5OGFhZDdjN2ZhNGI2MmMyMGY3Y2Y5OGEyN2RiNmU2YTBiODU0ODMyN2NhMzVmNDU2ZTIxYTM2ZDkifX19"
+                            }
+                        ]
+                    },
+                    "Name": "Masked Wizard"
+                }
+            }
+        },
+        {
+            "id": "majora",
+            "tag": {
+                "SkullOwner": {
+                    "Id": "0fbfcff9-70d8-4aef-920f-116a5e29e0e2",
+                    "Properties": {
+                        "textures": [
+                            {
+                                "Value": "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDFiZWM5ZWUzZjIwOTBjNzU2ZjhlNmYxZTQzZmUzZDA1NmVhY2IxZGRhNDAzMTExYzA4NGJhMjkzZWM1MjEifX19"
+                            }
+                        ]
+                    },
+                    "Name": "Majora"
+                }
+            }
         }
     ]
 }

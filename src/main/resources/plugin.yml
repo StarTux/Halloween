@@ -11,10 +11,9 @@ commands:
   halloween:
     description: Halloween
     permission: halloween.halloween
-    permission-message: You do not have permission!
     usage: /<command>
+  maskcollector:
+    description: Mask collection
 permissions:
   halloween.halloween:
     description: Use /halloween
-    children:
-      halloween.child: true

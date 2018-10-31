@@ -123,7 +123,7 @@ final class Collector implements CommandExecutor {
                     .append("[" + mask.name + "]")
                     .color(ChatColor.GRAY)
                     .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/maskcollector " + mask.id))
-                    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(maskColor + mask.name + "\n" + ChatColor.GRAY + ChatColor.ITALIC + "Give this map to me.\nI will take good care of it, " + ChatColor.GRAY + ChatColor.ITALIC + "heehee!" + "\n" + ChatColor.DARK_RED + ChatColor.BOLD + "WARNING" + ChatColor.RESET + ChatColor.RED + " One such mask will beremoved\nfrom your inventory!")));
+                    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(maskColor + mask.name + "\n" + ChatColor.GRAY + ChatColor.ITALIC + "Give this map to me.\nI will take good care of it, " + ChatColor.GRAY + ChatColor.ITALIC + "heehee!" + "\n" + ChatColor.DARK_RED + ChatColor.BOLD + "WARNING" + ChatColor.RESET + ChatColor.RED + " One such mask will be removed\nfrom your inventory!")));
             }
         }
         player.spigot().sendMessage(cb.create());

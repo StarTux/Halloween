@@ -49,6 +49,7 @@ final class Collector implements CommandExecutor {
                     return true;
                 } else {
                     data.setShown(mask.id, "Collector");
+                    this.plugin.getLogger().info(player.getName() + " gave " + mask.id + " to Collector");
                     boolean complete = true;
                     for (String maskid: this.plugin.masks.ids()) {
                         if (!data.didShow(maskid, "Collector")) {
@@ -57,6 +58,7 @@ final class Collector implements CommandExecutor {
                         }
                     }
                     if (complete) {
+                        this.plugin.getLogger().info(player.getName() + " finished mask collection.");
                         data.collectedAll = complete;
                         Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "title:titles unlockset " + player.getName() + " MaskCollector");
                     }

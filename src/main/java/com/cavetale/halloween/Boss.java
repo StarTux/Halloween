@@ -389,7 +389,6 @@ final class Boss {
             event.setCancelled(true);
             return;
         }
-        damager.sendMessage(this.getClass().getName() + " " + event.getEventName() + " " + event.getFinalDamage() + " " + this.entity.getHealth());
         boolean melee = damager.equals(event.getDamager());
         switch (this.config.index) {
         case 0: {
@@ -445,6 +444,7 @@ final class Boss {
             } else {
                 name = GenericEvents.cachedPlayerName(damager);
             }
+            this.plugin.getLogger().info(name + " killed " + ChatColor.stripColor(this.entity.getCustomName()));
             for (Player online: Bukkit.getServer().getOnlinePlayers()) {
                 online.sendMessage(name + " killed " + this.entity.getCustomName());
             }

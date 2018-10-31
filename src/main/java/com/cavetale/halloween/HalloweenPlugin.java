@@ -1,6 +1,7 @@
 package com.cavetale.halloween;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -11,7 +12,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import java.util.List;
 
 public final class HalloweenPlugin extends JavaPlugin {
     SpawnDecoration spawnDecoration;

@@ -33,10 +33,7 @@ final class Collector implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String alias, String[] args) {
         if (!(sender instanceof Player)) return false;
         Player player = (Player)sender;
-        if (args.length == 0) {
-            showMaskList(player);
-            return true;
-        }
+        if (args.length == 0) return true;
         NPC npc = this.plugin.spawnDecoration.getCollector();
         if (npc == null) return true;
         if (npc.getLocation().distanceSquared(player.getLocation()) > 64.0) return true;

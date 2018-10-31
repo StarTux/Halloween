@@ -5,7 +5,7 @@ api-version: 1.13
 description: Halloween
 author: StarTux
 website: https://cavetale.com
-depend: []
+depend: [NPC, Dungeons, GenericEvents, ItemMarker, Dirty]
 softdepend: []
 commands:
   halloween:

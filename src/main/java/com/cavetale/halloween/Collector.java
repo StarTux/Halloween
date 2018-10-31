@@ -70,10 +70,10 @@ final class Collector implements CommandExecutor {
                         this.plugin.playTalking(player, npc.getEyeLocation(), 8);
                     } else {
                         player.sendMessage(ChatColor.GOLD + "Thank you.");
-                        GenericEvents.givePlayerMoney(player.getUniqueId(), 500.0, this.plugin, mask.name + " mask sold to mysterious Collector");
                         this.plugin.playJingle(player);
                         this.plugin.playTalking(player, npc.getEyeLocation(), 2);
                     }
+                    GenericEvents.givePlayerMoney(player.getUniqueId(), 500.0, this.plugin, mask.name + " mask sold to The Collector");
                     this.plugin.playEffect(player, npc.getHeadLocation());
                     showMaskList(player);
                     return true;

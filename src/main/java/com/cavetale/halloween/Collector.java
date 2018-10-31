@@ -2,6 +2,7 @@ package com.cavetale.halloween;
 
 import com.cavetale.itemmarker.ItemMarker;
 import com.cavetale.npc.NPC;
+import com.winthier.generic_events.GenericEvents;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -69,6 +70,7 @@ final class Collector implements CommandExecutor {
                         this.plugin.playTalking(player, npc.getEyeLocation(), 8);
                     } else {
                         player.sendMessage(ChatColor.GOLD + "Thank you.");
+                        GenericEvents.givePlayerMoney(player.getUniqueId(), 500.0, this.plugin, mask.name + " mask sold to mysterious Collector");
                         this.plugin.playJingle(player);
                         this.plugin.playTalking(player, npc.getEyeLocation(), 2);
                     }

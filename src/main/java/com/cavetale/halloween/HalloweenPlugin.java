@@ -11,6 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import java.util.List;
 
 public final class HalloweenPlugin extends JavaPlugin {
     SpawnDecoration spawnDecoration;
@@ -18,11 +19,13 @@ public final class HalloweenPlugin extends JavaPlugin {
     Persistence persistence;
     HalloweenListener halloweenListener;
     Collector collector;
+    List<Boss> bosses;
 
     @Override
     public void onEnable() {
         saveDefaultConfig();
         reloadConfig();
+        saveResource("bosses.json", false);
         this.persistence = new Persistence(this);
         this.persistence.load();
         this.spawnDecoration = new SpawnDecoration(this);
@@ -35,11 +38,17 @@ public final class HalloweenPlugin extends JavaPlugin {
         this.collector = new Collector(this);
         this.collector.importConfig();
         getCommand("maskcollector").setExecutor(this.collector);
+        this.bosses = Boss.loadBosses(this);
     }
 
     @Override
     public void onDisable() {
         spawnDecoration.disable();
+        for (Boss boss: this.bosses) {
+            boss.savePersistence();
+            boss.remove();
+        }
+        this.bosses.clear();
     }
 
     @Override
@@ -85,6 +94,20 @@ public final class HalloweenPlugin extends JavaPlugin {
             reloadConfig();
             this.collector.importConfig();
             sender.sendMessage("config.yml reloaded");
+            for (Boss boss: this.bosses) {
+                boss.remove();
+            }
+            this.bosses = Boss.loadBosses(this);
+            sender.sendMessage("bosses reloaded");
+            this.persistence.load();
+            sender.sendMessage("player persistence reloaded");
+            this.masks.enable();
+            sender.sendMessage("masks reloaded");
+            return true;
+        }
+        case "killboss": {
+            for (Boss boss: this.bosses) boss.kill();
+            sender.sendMessage("Bosses killed");
             return true;
         }
         default: return false;
@@ -93,6 +116,9 @@ public final class HalloweenPlugin extends JavaPlugin {
 
     void tick() {
         spawnDecoration.tick();
+        if (getServer().getWorld(this.collector.getHalloweenWorld()) != null) {
+            for (Boss boss: this.bosses) boss.onTick();
+        }
     }
 
     void playCandyEffect(final Player player) {

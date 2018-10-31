@@ -11,6 +11,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityCombustEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -81,6 +85,35 @@ final class HalloweenListener implements Listener {
         ItemStack item = event.getItemInHand();
         if (ItemMarker.hasCustomId(item, Masks.MASK_ID)) {
             event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onEntityDamage(EntityDamageEvent event) {
+        if (event instanceof EntityDamageByEntityEvent) return;
+        for (Boss boss: this.plugin.bosses) {
+            if (boss.isEntity(event.getEntity())) boss.onEntityDamage(event);
+        }
+    }
+
+    @EventHandler
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+        for (Boss boss: this.plugin.bosses) {
+            if (boss.isEntity(event.getEntity())) boss.onEntityDamageByEntity(event);
+        }
+    }
+
+    @EventHandler
+    public void onEntityCombust(EntityCombustEvent event) {
+        for (Boss boss: this.plugin.bosses) {
+            if (boss.isEntity(event.getEntity())) boss.onEntityCombust(event);
+        }
+    }
+
+    @EventHandler
+    public void onEntityDeath(EntityDeathEvent event) {
+        for (Boss boss: this.plugin.bosses) {
+            if (boss.isEntity(event.getEntity())) boss.onEntityDeath(event);
         }
     }
 }

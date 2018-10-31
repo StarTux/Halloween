@@ -56,7 +56,10 @@ final class Collector implements CommandExecutor {
                             break;
                         }
                     }
-                    data.collectedAll = complete;
+                    if (complete) {
+                        data.collectedAll = complete;
+                        Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "title:titles unlockset " + player.getName() + " MaskCollector");
+                    }
                     this.plugin.persistence.save();
                     if (complete) {
                         player.sendMessage(ChatColor.GOLD + "Finally, my collection is complete!!!");

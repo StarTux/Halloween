@@ -48,14 +48,18 @@ final class Persistence {
             long count = 0;
             List<String> ids = pl.masks.ids();
             Collections.shuffle(ids);
-            for (String maskId: ids) {
-                long maskIdCount = shown.stream().filter(s -> s.get(0).equals(maskId)).count();
-                if (mask == null || count > maskIdCount) {
-                    mask = maskId;
-                    count = maskIdCount;
+            if (this.collectedAll) {
+                return ids.get(0);
+            } else {
+                for (String maskId: ids) {
+                    long maskIdCount = shown.stream().filter(s -> s.get(0).equals(maskId)).count();
+                    if (mask == null || count > maskIdCount) {
+                        mask = maskId;
+                        count = maskIdCount;
+                    }
                 }
+                return mask;
             }
-            return mask;
         }
     }
 

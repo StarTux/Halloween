@@ -431,6 +431,7 @@ final class Boss {
         if (!event.isCancelled()) {
             this.persistence.health = this.entity.getHealth();
             this.persistence.damagers.add(damager.getUniqueId());
+            this.entity.setNoDamageTicks(0);
         }
     }
 

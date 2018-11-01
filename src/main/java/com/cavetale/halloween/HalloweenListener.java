@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.EntityBlockFormEvent;
 import org.bukkit.event.entity.EntityCombustEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -115,5 +116,12 @@ final class HalloweenListener implements Listener {
         for (Boss boss: this.plugin.bosses) {
             if (boss.isEntity(event.getEntity())) boss.onEntityDeath(event);
         }
+    }
+
+    // Frost walker
+    @EventHandler(ignoreCancelled = true)
+    public void onEntityBlockForm(EntityBlockFormEvent event) {
+        if (!event.getBlock().getWorld().getName().equals(this.plugin.collector.getHalloweenWorld())) return;
+        event.setCancelled(true);
     }
 }

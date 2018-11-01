@@ -84,7 +84,7 @@ final class HalloweenListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent event) {
         ItemStack item = event.getItemInHand();
-        if (ItemMarker.hasCustomId(item, Masks.MASK_ID)) {
+        if (ItemMarker.hasCustomId(item, Masks.MASK_ITEM_ID)) {
             event.setCancelled(true);
         }
     }

@@ -31,3 +31,53 @@ Treater:
     signature: "L4ZewdAtHKvmvL62FbaUFNGn0NUm2enbc69e9uRzCCMTgaAGtDVIn1T+2B+JAZFlqsq0Qr/GckTgjygrGvUQgT/7e4xA5EC81VWdqQTy3mir7SgTZtBeW/ewMACVyNuqvEqWaKaEkSjOWIr/ENLNV8a/5/zr3vKL50GYbjOb3huGDdVdHn0cHfd1QYHs2tqqQDUbWlOl8d/9kAezLhTrxwVYk7PmsA72FcRNkCW/iAAfMs2ypIbq3WUbCBHKAB/jhd6BfVrEDsQq/8Ui0tYa2Cm8faKPfxynKe0BWdtL2pnURmbJZpagDI6ZZo31ziMPvsAEkhwUbZF/Q1NdDv6mKghTUvk+2VnpZtbpl6EIzjKJn8r3bmRUleggeTCLDmQgEzoRzhHwS5UY9+Im7a+4QJJm2lbP9Vb9yNkrCYIuLxh4FilWW3Ioia0oeLK1vu9RqPQH4ahORElZJvlvJhsMh+srvK8alzMK+bWx5kEZOtLUnbPc5FmjFA5aZ4hL4+PKlEJGItmhfYpoz/RM+YUNGOaobqCzEATHyYul8MN/xq//LGIJl6A+UB6DyuRLR7mNaF991ZMZ3pRW4htzSR/CQ1yhQyb32pLoDr9rYk31HkD71NTEszH64eQuUJVUQo2lkxRqEAOwnATCnVKV8+SXQV+JEzh6kwcaceOPLU6Mdbk="
 HalloweenWorld: halloween
 HalloweenPortal: [spawn, 2098, 75, 932]
+reward1:
+  ==: org.bukkit.inventory.ItemStack
+  v: 1631
+  type: GOLDEN_SWORD
+  meta:
+    ==: ItemMeta
+    meta-type: UNSPECIFIC
+    display-name: §6Holy Sword
+    lore:
+    - The Holy Sword was
+    - consecrated so foul
+    - beasts shall perish
+    - at your hands.
+    enchants:
+      DAMAGE_ALL: 5
+      DAMAGE_UNDEAD: 5
+    attribute-modifiers:
+      GENERIC_ATTACK_DAMAGE:
+      - ==: org.bukkit.attribute.AttributeModifier
+        amount: 7.0
+        name: generic.attackDamage
+        slot: HAND
+        uuid: f88ce837-33fb-ae97-c3d8-9112276a160a
+        operation: 0
+      GENERIC_ATTACK_SPEED:
+      - ==: org.bukkit.attribute.AttributeModifier
+        amount: 1.6
+        name: generic.attackSpeed
+        slot: HAND
+        uuid: bb89da26-582b-0891-eb8a-a75aa2f5720b
+        operation: 0
+reward2:
+  ==: org.bukkit.inventory.ItemStack
+  v: 1631
+  type: TRIDENT
+  meta:
+    ==: ItemMeta
+    meta-type: UNSPECIFIC
+    enchants:
+      CHANNELING: 1
+      IMPALING: 5
+      LOYALTY: 3
+    display-name: "§bNeptune's Trident"
+    lore:
+    - This mighty spear
+    - shall slay beasts
+    - of the deep sea
+    - before returning
+    - to its rightful
+    - owner.

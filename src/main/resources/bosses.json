@@ -2,16 +2,16 @@
     {
         "id": "skellington",
         "spawnLocation": [ 0, 67, -178 ],
-        "healing": 40.0
+        "healing": 10.0
     },
     {
         "id": "deepfear",
         "spawnLocation": [ -48, 26, -132 ],
-        "healing": 40.0
+        "healing": 20.0
     },
     {
         "id": "pumpkinking",
         "spawnLocation": [0 , 70, -5],
-        "healing": 40.0
+        "healing": 30.0
     }
 ]

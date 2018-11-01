@@ -3,7 +3,6 @@ package com.cavetale.halloween;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.winthier.generic_events.GenericEvents;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -436,15 +435,14 @@ final class Boss {
     }
 
     void onEntityDeath(EntityDeathEvent event) {
-        for (UUID damager: this.persistence.damagers) {
-            Player winner = Bukkit.getServer().getPlayer(damager);
-            String name;
-            if (winner != null) {
-                name = winner.getName();
-                this.plugin.playCompleteSound(winner);
-            } else {
-                name = GenericEvents.cachedPlayerName(damager);
-            }
+        ItemStack reward = this.plugin.getConfig().getItemStack("reward" + (this.config.index + 1));
+        if (reward != null) {
+            this.entity.getWorld().dropItem(this.entity.getLocation(), reward).setInvulnerable(true);
+            this.plugin.getLogger().info("Dropped reward: " + reward.getItemMeta().getDisplayName());
+        }
+        for (Player winner: getWorld().getPlayers()) {
+            if (!this.persistence.damagers.contains(winner.getUniqueId())) continue;
+            String name = winner.getName();
             this.plugin.getLogger().info(name + " killed " + ChatColor.stripColor(this.entity.getCustomName()));
             for (Player online: Bukkit.getServer().getOnlinePlayers()) {
                 online.sendMessage(name + " killed " + this.entity.getCustomName());

@@ -398,7 +398,8 @@ final class Boss {
                 if (level == 0) {
                     event.setCancelled(true);
                 } else {
-                    event.setDamage(event.getFinalDamage() * (double)(level) / 5.0);
+                    this.entity.setFireTicks(100);
+                    this.entity.getWorld().playSound(this.entity.getLocation(), Sound.ENTITY_WITHER_HURT, 0.5f, 1.7f);
                 }
             } else {
                 event.setCancelled(true);

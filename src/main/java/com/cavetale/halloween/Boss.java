@@ -239,6 +239,7 @@ final class Boss {
     }
 
     void tickLiving() {
+        this.entity.setNoDamageTicks(0);
         if ((this.persistence.ticksLived % 20) == 10) {
             double max = this.entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
             this.entity.setHealth(Math.min(this.entity.getHealth() + this.config.healing, max));
@@ -246,7 +247,7 @@ final class Boss {
         switch (this.config.index) {
         case 0: {
             Skeleton skeleton = (Skeleton)this.entity;
-            if (skeleton.getVehicle() == null) {
+            if (skeleton.getVehicle() == null && ((this.persistence.ticksLived % 20) == 0) && random.nextInt(5) == 0) {
                 Spider spider = skeleton.getWorld().spawn(skeleton.getLocation(), Spider.class);
                 spider.addPassenger(skeleton);
                 for (int i = 0; i < 4; i += 1) {
@@ -301,7 +302,7 @@ final class Boss {
         }
         case 2: {
             WitherSkeleton wither = (WitherSkeleton)this.entity;
-            if (wither.getVehicle() == null) {
+            if (wither.getVehicle() == null && ((this.persistence.ticksLived) % 20) == 0 && random.nextInt(5) == 0) {
                 MagmaCube cube = wither.getWorld().spawn(wither.getLocation(), MagmaCube.class, (c) -> {
                         c.setSize(3);
                     });
@@ -431,7 +432,6 @@ final class Boss {
         if (!event.isCancelled()) {
             this.persistence.health = this.entity.getHealth();
             this.persistence.damagers.add(damager.getUniqueId());
-            this.entity.setNoDamageTicks(0);
         }
     }
 

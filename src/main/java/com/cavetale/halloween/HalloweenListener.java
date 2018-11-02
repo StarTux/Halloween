@@ -27,17 +27,11 @@ final class HalloweenListener implements Listener {
 
     @EventHandler
     public void onDungeonLoot(DungeonLootEvent event) {
+        if (event.getDungeon().isRaided()) return;
         Player player = event.getPlayer();
         int slot = ThreadLocalRandom.current().nextInt(event.getInventory().getSize());
         event.getInventory().setItem(slot, plugin.masks.spawnCandy());
         Persistence.PlayerData playerData = this.plugin.persistence.getPlayerData(player);
-        Block block = event.getBlock();
-        if (Math.abs(block.getX() - playerData.lastX) < 64 && Math.abs(block.getZ() - playerData.lastZ) < 64) {
-            return;
-        }
-        playerData.lastX = block.getX();
-        playerData.lastZ = block.getZ();
-        this.plugin.persistence.save();
         String mask = playerData.rollMaskDrop(this.plugin);
         slot = ThreadLocalRandom.current().nextInt(event.getInventory().getSize());
         event.getInventory().setItem(slot, plugin.masks.spawnMask(mask, player));

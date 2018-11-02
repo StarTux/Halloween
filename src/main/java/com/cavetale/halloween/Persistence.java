@@ -31,7 +31,6 @@ final class Persistence {
     @Data
     static class PlayerData {
         String name;
-        int lastX = Integer.MAX_VALUE, lastZ = Integer.MAX_VALUE;
         boolean collectedAll;
         Set<List<String>> shown = new HashSet<>();
 

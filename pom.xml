@@ -12,11 +12,7 @@
   <build>
     <finalName>${project.name}</finalName>
     <plugins>
-      <!-- Surefire for Testing -->
-      <plugin>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.22.0</version>
-      </plugin>
+
       <!-- Java 8 -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -32,48 +28,43 @@
           </compilerArgs>
         </configuration>
       </plugin>
+
     </plugins>
   </build>
   <repositories>
-    <!-- Spigot Repo -->
+
+    <!-- Paper Repo -->
     <repository>
-      <id>spigot-repo</id>
-      <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+      <id>papermc</id>
+      <url>https://papermc.io/repo/repository/maven-public/</url>
     </repository>
+
     <!-- Cavetale Repo -->
     <repository>
       <id>cavetale</id>
       <url>https://cavetale.com/jenkins/plugin/repository/everything/</url>
     </repository>
+
   </repositories>
   <dependencies>
-    <!-- Spigot-API -->
+
+    <!-- Paper API -->
     <dependency>
-      <groupId>org.spigotmc</groupId>
-      <artifactId>spigot-api</artifactId>
-      <version>1.13.1-R0.1-SNAPSHOT</version>
+      <groupId>com.destroystokyo.paper</groupId>
+      <artifactId>paper-api</artifactId>
+      <version>1.16.3-R0.1-SNAPSHOT</version>
+      <scope>provided</scope>
+      <optional>true</optional>
     </dependency>
+
     <!-- Lombok -->
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.18.2</version>
+      <version>1.18.12</version>
       <scope>provided</scope>
     </dependency>
-    <!-- ItemMarker -->
-    <dependency>
-      <groupId>com.cavetale.itemmarker</groupId>
-      <artifactId>itemmarker</artifactId>
-      <version>0.1-SNAPSHOT</version>
-      <scope>provided</scope>
-    </dependency>
-    <!-- NPC -->
-    <dependency>
-      <groupId>com.cavetale.npc</groupId>
-      <artifactId>npc</artifactId>
-      <version>0.1-SNAPSHOT</version>
-      <scope>provided</scope>
-    </dependency>
+
     <!-- Dungeons -->
     <dependency>
       <groupId>com.cavetale.dungeons</groupId>
@@ -81,13 +72,15 @@
       <version>0.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
-    <!-- Dungeons -->
+
+    <!-- GenericEvents -->
     <dependency>
       <groupId>com.winthier.generic_events</groupId>
       <artifactId>generic_events</artifactId>
       <version>0.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
+
     <!-- Dirty -->
     <dependency>
       <groupId>com.cavetale.dirty</groupId>
@@ -95,5 +88,22 @@
       <version>0.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
+
+    <!-- Dirty -->
+    <dependency>
+      <groupId>com.cavetale.dirty</groupId>
+      <artifactId>dirty</artifactId>
+      <version>0.1-SNAPSHOT</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- WorldMarker -->
+    <dependency>
+      <groupId>com.cavetale.worldmarker</groupId>
+      <artifactId>worldmarker</artifactId>
+      <version>0.1-SNAPSHOT</version>
+      <scope>provided</scope>
+    </dependency>
+
   </dependencies>
 </project>

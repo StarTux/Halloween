@@ -1,54 +1,50 @@
 package com.cavetale.halloween;
 
+import com.destroystokyo.paper.profile.PlayerProfile;
+import com.destroystokyo.paper.profile.ProfileProperty;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import org.bukkit.Bukkit;
+import org.bukkit.Color;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public final class HalloweenPlugin extends JavaPlugin {
-    SpawnDecoration spawnDecoration;
     Masks masks;
     Persistence persistence;
     HalloweenListener halloweenListener;
     Collector collector;
-    List<Boss> bosses;
 
     @Override
     public void onEnable() {
         saveDefaultConfig();
         reloadConfig();
-        saveResource("bosses.json", false);
-        this.persistence = new Persistence(this);
-        this.persistence.load();
-        this.spawnDecoration = new SpawnDecoration(this);
-        this.spawnDecoration.enable();
-        this.masks = new Masks(this);
-        this.masks.enable();
-        this.halloweenListener = new HalloweenListener(this);
-        getServer().getPluginManager().registerEvents(this.halloweenListener, this);
-        getServer().getScheduler().runTaskTimer(this, this::tick, 1L, 1L);
-        this.collector = new Collector(this);
-        this.collector.importConfig();
-        getCommand("maskcollector").setExecutor(this.collector);
-        this.bosses = Boss.loadBosses(this);
+        persistence = new Persistence(this);
+        persistence.load();
+        masks = new Masks(this);
+        masks.enable();
+        halloweenListener = new HalloweenListener(this);
+        getServer().getPluginManager().registerEvents(halloweenListener, this);
+        collector = new Collector(this);
+        getCommand("maskcollector").setExecutor(collector);
     }
 
     @Override
     public void onDisable() {
-        spawnDecoration.disable();
-        for (Boss boss: this.bosses) {
-            boss.savePersistence();
-            boss.remove();
-        }
-        this.bosses.clear();
     }
 
     @Override
@@ -58,66 +54,63 @@ public final class HalloweenPlugin extends JavaPlugin {
         switch (args[0]) {
         case "mask": {
             if (args.length == 1) {
-                sender.sendMessage(this.masks.size() + " masks");
-                sender.sendMessage("" + this.masks.ids());
+                sender.sendMessage(masks.size() + " masks");
+                sender.sendMessage("" + masks.ids());
             } else if (args.length == 2) {
                 if (args[1].equals("all")) {
                     for (String i: masks.ids()) {
-                        player.getInventory().addItem(this.masks.spawnMask(i, player));
+                        player.getInventory().addItem(masks.spawnMask(i, player));
                     }
                 } else {
-                    player.getInventory().addItem(this.masks.spawnMask(args[1], player));
+                    player.getInventory().addItem(masks.spawnMask(args[1], player));
                 }
             } else if (args.length == 3) {
                 Player target = getServer().getPlayerExact(args[2]);
-                player.getInventory().addItem(this.masks.spawnMask(args[1], target));
+                player.getInventory().addItem(masks.spawnMask(args[1], target));
             }
             return true;
         }
-        case "treater": {
-            if (args.length != 2) return false;
-            SpawnDecoration.Treater treater = new SpawnDecoration.Treater();
-            treater.name = args[1];
-            treater.id = UUID.randomUUID().toString().replace("-", "");
-            treater.location = Arrays.asList(player.getWorld().getName(), player.getLocation().getX(), player.getLocation().getY(), player.getLocation().getZ());
-            spawnDecoration.treaters.add(treater);
-            spawnDecoration.saveTreaters();
-            player.sendMessage("Treater added: " + treater.name);
+        case "candy": {
+            masks.spawnCandy(player.getEyeLocation());
+            playJingle(player);
             return true;
         }
-        case "candy": {
-            this.masks.spawnCandy(player.getEyeLocation());
-            playJingle(player);
+        case "spawn": {
+            if (player == null) return false;
+            if (args.length != 2) return false;
+            String name = args[1];
+            ConfigurationSection section = name.equals("Collector")
+                ? getConfig().getConfigurationSection("Collector")
+                : getConfig().getConfigurationSection("Treater." + name);
+            if (section == null) {
+                sender.sendMessage("Not found: " + name);
+                return true;
+            }
+            String texture = section.getString("texture");
+            String signature = section.getString("signature");
+            ItemStack skull = makeSkull(name, texture, signature);
+            ArmorStand armorStand = player.getWorld().spawn(player.getLocation(), ArmorStand.class, e -> {
+                    e.setPersistent(true);
+                    e.setBasePlate(false);
+                    e.setArms(true);
+                    e.setHelmet(skull);
+                    e.setChestplate(makeBlack(Material.LEATHER_CHESTPLATE));
+                    e.setLeggings(makeBlack(Material.LEATHER_LEGGINGS));
+                    e.setBoots(makeBlack(Material.LEATHER_BOOTS));
+                });
+            player.sendMessage("Spawned: " + name);
             return true;
         }
         case "reload": {
             reloadConfig();
-            this.collector.importConfig();
             sender.sendMessage("config.yml reloaded");
-            for (Boss boss: this.bosses) {
-                boss.remove();
-            }
-            this.bosses = Boss.loadBosses(this);
-            sender.sendMessage("bosses reloaded");
-            this.persistence.load();
+            persistence.load();
             sender.sendMessage("player persistence reloaded");
-            this.masks.enable();
+            masks.enable();
             sender.sendMessage("masks reloaded");
             return true;
         }
-        case "killboss": {
-            for (Boss boss: this.bosses) boss.kill();
-            sender.sendMessage("Bosses killed");
-            return true;
-        }
         default: return false;
-        }
-    }
-
-    void tick() {
-        spawnDecoration.tick();
-        if (getServer().getWorld(this.collector.getHalloweenWorld()) != null) {
-            for (Boss boss: this.bosses) boss.onTick();
         }
     }
 
@@ -172,5 +165,24 @@ public final class HalloweenPlugin extends JavaPlugin {
 
     void showPortalParticle(final Player player, final Location location) {
         player.spawnParticle(Particle.END_ROD, location, 5, 0.25, 0.25, 0.25, 0.0);
+    }
+
+    public ItemStack makeSkull(String name, String texture, String signature) {
+        ItemStack item = new ItemStack(Material.PLAYER_HEAD);
+        SkullMeta meta = (SkullMeta) item.getItemMeta();
+        PlayerProfile profile = Bukkit.getServer().createProfile(UUID.randomUUID(), name);
+        ProfileProperty prop = new ProfileProperty("textures", texture, signature);
+        profile.setProperty(prop);
+        meta.setPlayerProfile(profile);
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    public ItemStack makeBlack(Material mat) {
+        ItemStack item = new ItemStack(mat);
+        LeatherArmorMeta meta = (LeatherArmorMeta) item.getItemMeta();
+        meta.setColor(Color.BLACK);
+        item.setItemMeta(meta);
+        return item;
     }
 }

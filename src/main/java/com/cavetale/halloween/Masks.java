@@ -1,7 +1,7 @@
 package com.cavetale.halloween;
 
 import com.cavetale.dirty.Dirty;
-import com.cavetale.itemmarker.ItemMarker;
+import com.cavetale.worldmarker.ItemMarker;
 import com.google.gson.Gson;
 import java.io.File;
 import java.io.FileReader;
@@ -14,21 +14,30 @@ import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataHolder;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.Vector;
 
-@RequiredArgsConstructor
-final class Masks {
+public final class Masks {
     private final HalloweenPlugin plugin;
     MaskConfig maskConfig = new MaskConfig();
-    public static final String MASK_ITEM_ID = "halloween_mask";
-    public static final String MASK_ID = "halloween_mask_id";
+    public static final String MASK_ITEM_ID = "halloween:mask";
+    public final NamespacedKey maskId;
+    public final NamespacedKey ownerId;
+
+    public Masks(HalloweenPlugin plugin) {
+        this.plugin = plugin;
+        maskId = new NamespacedKey(plugin, "mask_id");
+        ownerId = new NamespacedKey(plugin, "owner_id");
+    }
 
     class MaskConfig {
         List<String> lore = new ArrayList<>();
@@ -43,31 +52,31 @@ final class Masks {
     }
 
     void enable() {
-        this.plugin.saveResource("masks.json", false);
+        plugin.saveResource("masks.json", false);
         Gson gson = new Gson();
-        try (FileReader fr = new FileReader(new File(this.plugin.getDataFolder(), "masks.json"))) {
-            this.maskConfig = gson.fromJson(fr, MaskConfig.class);
+        try (FileReader fr = new FileReader(new File(plugin.getDataFolder(), "masks.json"))) {
+            maskConfig = gson.fromJson(fr, MaskConfig.class);
         } catch (IOException e) {
             e.printStackTrace();
-            this.maskConfig = new MaskConfig();
+            maskConfig = new MaskConfig();
         }
-        for (Mask mask: this.maskConfig.masks) {
+        for (Mask mask: maskConfig.masks) {
             Map map = (Map)mask.tag.get("SkullOwner");
             mask.name = (String)map.get("Name");
         }
-        this.plugin.getLogger().info("" + this.maskConfig.masks.size() + " masks loaded");
+        plugin.getLogger().info("" + maskConfig.masks.size() + " masks loaded");
     }
 
     int size() {
-        return this.maskConfig.masks.size();
+        return maskConfig.masks.size();
     }
 
     List<String> ids() {
-        return this.maskConfig.masks.stream().map(m -> m.id).collect(Collectors.toList());
+        return maskConfig.masks.stream().map(m -> m.id).collect(Collectors.toList());
     }
 
     Mask getMask(String name) {
-        for (Mask mask: this.maskConfig.masks) {
+        for (Mask mask: maskConfig.masks) {
             if (name.equals(mask.id)) return mask;
         }
         return null;
@@ -78,15 +87,46 @@ final class Masks {
         if (mask == null) return null;
         ItemStack item = Dirty.newCraftItemStack(Material.PLAYER_HEAD);
         Dirty.setItemTag(item, mask.tag);
-        ItemMarker.setCustomId(item, MASK_ITEM_ID);
-        ItemMarker.setMarker(item, MASK_ID, mask.id);
-        if (owner != null) ItemMarker.setOwner(item, owner.getUniqueId());
-        List<String> lore = new ArrayList<>(this.maskConfig.lore);
+        ItemMarker.setId(item, MASK_ITEM_ID);
+        List<String> lore = new ArrayList<>(maskConfig.lore);
         if (owner != null) lore.add("" + ChatColor.GRAY + "Property of " + owner.getName() + ".");
-        HashMap<String, Object> displayMap = new HashMap<>();
-        displayMap.put("Lore", lore);
-        ItemMarker.setMarker(item, "display", displayMap);
+        ItemMeta meta = item.getItemMeta();
+        PersistentDataContainer tag = meta.getPersistentDataContainer();
+        tag.set(maskId, PersistentDataType.STRING, mask.id);
+        if (owner != null) {
+            tag.set(ownerId, PersistentDataType.STRING, owner.getUniqueId().toString());
+        }
+        meta.setLore(lore);
+        item.setItemMeta(meta);
         return item;
+    }
+
+    public boolean isOwner(Player player, ItemStack item) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return false;
+        PersistentDataContainer tag = meta.getPersistentDataContainer();
+        if (!tag.has(ownerId, PersistentDataType.STRING)) return false;
+        String id = tag.get(ownerId, PersistentDataType.STRING);
+        if (id == null) return false;
+        return id.equals(player.getUniqueId().toString());
+    }
+
+    public boolean isMask(Mask mask, ItemStack item) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return false;
+        PersistentDataContainer tag = meta.getPersistentDataContainer();
+        if (!tag.has(maskId, PersistentDataType.STRING)) return false;
+        String id = tag.get(maskId, PersistentDataType.STRING);
+        if (id == null) return false;
+        return id.equals(mask.id);
+    }
+
+    public String getMask(ItemStack item) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return null;
+        PersistentDataContainer tag = meta.getPersistentDataContainer();
+        if (!tag.has(maskId, PersistentDataType.STRING)) return null;
+        return tag.get(maskId, PersistentDataType.STRING);
     }
 
     ItemStack spawnCandy() {
@@ -101,7 +141,7 @@ final class Masks {
         meta.setLore(Arrays.asList("Eat this delicious treat",
                                    "for a magical effect."));
         item.setItemMeta(meta);
-        item = ItemMarker.setCustomId(item, "halloween_candy");
+        ItemMarker.setId(item, "halloween:candy");
         return item;
     }
 

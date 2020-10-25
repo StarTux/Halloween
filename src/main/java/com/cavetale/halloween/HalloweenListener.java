@@ -1,7 +1,7 @@
 package com.cavetale.halloween;
 
 import com.cavetale.dungeons.DungeonLootEvent;
-import com.cavetale.itemmarker.ItemMarker;
+import com.cavetale.worldmarker.ItemMarker;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -31,33 +31,33 @@ final class HalloweenListener implements Listener {
         Player player = event.getPlayer();
         int slot = ThreadLocalRandom.current().nextInt(event.getInventory().getSize());
         event.getInventory().setItem(slot, plugin.masks.spawnCandy());
-        Persistence.PlayerData playerData = this.plugin.persistence.getPlayerData(player);
-        String mask = playerData.rollMaskDrop(this.plugin);
+        Persistence.PlayerData playerData = plugin.persistence.getPlayerData(player);
+        String mask = playerData.rollMaskDrop(plugin);
         slot = ThreadLocalRandom.current().nextInt(event.getInventory().getSize());
         event.getInventory().setItem(slot, plugin.masks.spawnMask(mask, player));
-        this.plugin.playJingle(player);
-        this.plugin.playEffect(player, event.getBlock().getLocation().add(0.5, 1.5, 0.5));
-        this.plugin.getLogger().info("Spawning Halloween dungeon loot for " + player.getName() + " mask=" + mask);
+        plugin.playJingle(player);
+        plugin.playEffect(player, event.getBlock().getLocation().add(0.5, 1.5, 0.5));
+        plugin.getLogger().info("Spawning Halloween dungeon loot for " + player.getName() + " mask=" + mask);
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerItemConsume(PlayerItemConsumeEvent event) {
         ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
-        if (ItemMarker.hasCustomId(item, "halloween_candy")) {
+        if (ItemMarker.hasId(item, "halloween:candy")) {
             givePotionEffect(event.getPlayer());
             return;
         }
         if (event.getItem().equals(item)) return;
         item = event.getPlayer().getInventory().getItemInOffHand();
-        if (ItemMarker.hasCustomId(item, "halloween_candy")) {
+        if (ItemMarker.hasId(item, "halloween:candy")) {
             givePotionEffect(event.getPlayer());
             return;
         }
     }
 
     void givePotionEffect(Player player) {
-        this.plugin.getLogger().info(player.getName() + " ate halloween candy");
-        this.plugin.playCandyEffect(player);
+        plugin.getLogger().info(player.getName() + " ate halloween candy");
+        plugin.playCandyEffect(player);
         List<PotionEffectType> types = Arrays.asList(PotionEffectType.ABSORPTION,
                                                      PotionEffectType.DOLPHINS_GRACE,
                                                      PotionEffectType.FAST_DIGGING,
@@ -78,44 +78,8 @@ final class HalloweenListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent event) {
         ItemStack item = event.getItemInHand();
-        if (ItemMarker.hasCustomId(item, Masks.MASK_ITEM_ID)) {
+        if (ItemMarker.hasId(item, Masks.MASK_ITEM_ID)) {
             event.setCancelled(true);
         }
-    }
-
-    @EventHandler
-    public void onEntityDamage(EntityDamageEvent event) {
-        if (event instanceof EntityDamageByEntityEvent) return;
-        for (Boss boss: this.plugin.bosses) {
-            if (boss.isEntity(event.getEntity())) boss.onEntityDamage(event);
-        }
-    }
-
-    @EventHandler
-    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        for (Boss boss: this.plugin.bosses) {
-            if (boss.isEntity(event.getEntity())) boss.onEntityDamageByEntity(event);
-        }
-    }
-
-    @EventHandler
-    public void onEntityCombust(EntityCombustEvent event) {
-        for (Boss boss: this.plugin.bosses) {
-            if (boss.isEntity(event.getEntity())) boss.onEntityCombust(event);
-        }
-    }
-
-    @EventHandler
-    public void onEntityDeath(EntityDeathEvent event) {
-        for (Boss boss: this.plugin.bosses) {
-            if (boss.isEntity(event.getEntity())) boss.onEntityDeath(event);
-        }
-    }
-
-    // Frost walker
-    @EventHandler(ignoreCancelled = true)
-    public void onEntityBlockForm(EntityBlockFormEvent event) {
-        if (!event.getBlock().getWorld().getName().equals(this.plugin.collector.getHalloweenWorld())) return;
-        event.setCancelled(true);
     }
 }

@@ -135,17 +135,18 @@ final class Collector implements CommandExecutor {
             cb.append(" ") .reset();
             ChatColor maskColor = colors.get(colorI++ % colors.size());
             if (collected) {
-                cb
-                    .append(mask.name)
-                    .color(maskColor)
-                    .bold(true)
-                    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText("" + maskColor + ChatColor.BOLD + mask.name + "\n" + ChatColor.RESET + ChatColor.GRAY + ChatColor.ITALIC + "You gave me this mask.\nThank you!")));
+                cb.append(mask.name).color(maskColor).bold(true);
+                String tooltip = "" + maskColor + ChatColor.BOLD + mask.name
+                    + "\n" + ChatColor.GRAY + ChatColor.ITALIC + "You gave me this mask."
+                    + "\n" + ChatColor.GRAY + ChatColor.ITALIC + "Thank you!";
+                cb.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(tooltip)));
             } else {
-                cb
-                    .append("[" + mask.name + "]")
-                    .color(ChatColor.GRAY)
-                    .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/maskcollector collector " + mask.id))
-                    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(maskColor + mask.name + "\n" + ChatColor.GRAY + ChatColor.ITALIC + "Give this mask to me.\nI will take good care of it, " + ChatColor.GRAY + ChatColor.ITALIC + "heehee!" + "\n" + ChatColor.DARK_RED + ChatColor.BOLD + "WARNING" + ChatColor.RESET + ChatColor.RED + " One such mask will be removed\nfrom your inventory!")));
+                cb.append("[" + mask.name + "]").color(ChatColor.GRAY);
+                cb.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/maskcollector collector " + mask.id));
+                String tooltip = maskColor + mask.name
+                    + "\n" + ChatColor.GRAY + ChatColor.ITALIC + "Give this mask to me. I will take good care of it, heehee!"
+                    + "\n" + ChatColor.DARK_RED + ChatColor.BOLD + "WARNING" + ChatColor.RESET + ChatColor.RED + " One such mask will be removed from your inventory!";
+                cb.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(tooltip)));
             }
         }
         player.spigot().sendMessage(cb.create());

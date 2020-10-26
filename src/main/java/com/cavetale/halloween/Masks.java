@@ -147,8 +147,6 @@ public final class Masks {
 
     void spawnCandy(Location location) {
         ItemStack item = spawnCandy();
-        location.getWorld().dropItem(location, item).setVelocity(new Vector(ThreadLocalRandom.current().nextDouble() * 0.5 - 0.25,
-                                                                            ThreadLocalRandom.current().nextDouble() * 0.25,
-                                                                            ThreadLocalRandom.current().nextDouble() * 0.5 - 0.25));
+        location.getWorld().dropItem(location, item).setPickupDelay(0);
     }
 }

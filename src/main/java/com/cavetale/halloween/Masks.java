@@ -8,7 +8,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
@@ -22,9 +21,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataHolder;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.util.Vector;
 
 public final class Masks {
     private final HalloweenPlugin plugin;
@@ -33,7 +30,7 @@ public final class Masks {
     public final NamespacedKey maskId;
     public final NamespacedKey ownerId;
 
-    public Masks(HalloweenPlugin plugin) {
+    public Masks(final HalloweenPlugin plugin) {
         this.plugin = plugin;
         maskId = new NamespacedKey(plugin, "mask_id");
         ownerId = new NamespacedKey(plugin, "owner_id");
@@ -61,8 +58,8 @@ public final class Masks {
             maskConfig = new MaskConfig();
         }
         for (Mask mask: maskConfig.masks) {
-            Map map = (Map)mask.tag.get("SkullOwner");
-            mask.name = (String)map.get("Name");
+            Map map = (Map) mask.tag.get("SkullOwner");
+            mask.name = (String) map.get("Name");
         }
         plugin.getLogger().info("" + maskConfig.masks.size() + " masks loaded");
     }

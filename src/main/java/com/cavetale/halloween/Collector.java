@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.md_5.bungee.api.ChatColor;
@@ -16,7 +15,6 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -126,7 +124,8 @@ final class Collector implements CommandExecutor {
     }
 
     void showMaskList(Player player) {
-        List<ChatColor> colors = Arrays.asList(ChatColor.AQUA, ChatColor.BLUE, ChatColor.GOLD, ChatColor.GREEN, ChatColor.LIGHT_PURPLE, ChatColor.RED, ChatColor.YELLOW);
+        List<ChatColor> colors = Arrays.asList(ChatColor.AQUA, ChatColor.BLUE, ChatColor.GOLD, ChatColor.GREEN,
+                                               ChatColor.LIGHT_PURPLE, ChatColor.RED, ChatColor.YELLOW);
         Collections.shuffle(colors, new Random(0));
         ComponentBuilder cb = new ComponentBuilder("Masks").italic(true);
         int colorI = 0;
@@ -145,7 +144,7 @@ final class Collector implements CommandExecutor {
                 cb.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/maskcollector collector " + mask.id));
                 String tooltip = maskColor + mask.name
                     + "\n" + ChatColor.GRAY + ChatColor.ITALIC + "Give this mask to me. I will take good care of it, heehee!"
-                    + "\n" + ChatColor.DARK_RED + ChatColor.BOLD + "WARNING" + ChatColor.RESET + ChatColor.RED + " One such mask will be removed from your inventory!";
+                    + "\n" + ChatColor.DARK_RED + ChatColor.BOLD + "WARNING" + ChatColor.RED + " One such mask will be removed from your inventory!";
                 cb.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(tooltip)));
             }
         }

@@ -2,8 +2,6 @@ package com.cavetale.halloween;
 
 import com.destroystokyo.paper.profile.PlayerProfile;
 import com.destroystokyo.paper.profile.ProfileProperty;
-import java.util.Arrays;
-import java.util.List;
 import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -49,7 +47,7 @@ public final class HalloweenPlugin extends JavaPlugin {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String alias, String[] args) {
-        Player player = sender instanceof Player ? (Player)sender : null;
+        Player player = sender instanceof Player ? (Player) sender : null;
         if (args.length == 0) return false;
         switch (args[0]) {
         case "mask": {

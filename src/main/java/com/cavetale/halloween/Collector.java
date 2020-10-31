@@ -195,8 +195,8 @@ final class Collector implements CommandExecutor {
             Mytems mytems = itemList.get(i);
             ItemStack item = MytemsPlugin.getInstance().getMytem(mytems).getItem();
             gui.setItem(slot, item, click -> {
-                    player.closeInventory();
                     if (click.isShiftClick()) {
+                        player.closeInventory();
                         return unlockItem(player, mytems, click);
                     } else {
                         player.sendMessage(ChatColor.RED + "Shift click to choose!");

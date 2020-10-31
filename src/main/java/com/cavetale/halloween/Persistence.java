@@ -48,17 +48,16 @@ final class Persistence {
 
         String rollMaskDrop(HalloweenPlugin pl) {
             String mask = null;
-            long count = 0;
             List<String> ids = pl.masks.ids();
             Collections.shuffle(ids);
             if (this.collectedAll) {
                 return ids.get(0);
             } else {
                 for (String maskId: ids) {
-                    long maskIdCount = shown.stream().filter(s -> s.get(0).equals(maskId)).count();
-                    if (mask == null || count > maskIdCount) {
+                    long maskIdCount = shown.stream().filter(s -> s.get(0).equals(maskId)
+                                                             && s.get(1).equals("Collector")).count();
+                    if (mask == null || maskIdCount == 0) {
                         mask = maskId;
-                        count = maskIdCount;
                     }
                 }
                 return mask;

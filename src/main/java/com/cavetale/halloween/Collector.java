@@ -1,5 +1,7 @@
 package com.cavetale.halloween;
 
+import com.cavetale.mytems.Mytems;
+import com.cavetale.mytems.MytemsPlugin;
 import com.cavetale.worldmarker.ItemMarker;
 import com.winthier.generic_events.GenericEvents;
 import java.util.Arrays;
@@ -15,10 +17,13 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 @RequiredArgsConstructor @Getter
@@ -39,6 +44,9 @@ final class Collector implements CommandExecutor {
             return true;
         case "treater":
             if (args.length == 2) return onTreater(player, args[1]);
+            return true;
+        case "shop":
+            if (args.length == 1) return onShop(player);
             return true;
         default: return true;
         }
@@ -148,6 +156,70 @@ final class Collector implements CommandExecutor {
                 cb.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(tooltip)));
             }
         }
-        player.spigot().sendMessage(cb.create());
+        player.sendMessage(cb.create());
+        cb = new ComponentBuilder();
+        cb.append("Once completed:").color(ChatColor.WHITE).italic(true);
+        cb.append(" ").reset();
+        if (plugin.persistence.getPlayerData(player).collectedAll) {
+            cb.append("[Open Reward Shop]").color(ChatColor.GREEN).bold(true);
+        } else {
+            cb.append("[Open Reward Shop]").color(ChatColor.GRAY);
+        }
+        cb.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/maskcollector shop"));
+        cb.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(ChatColor.GRAY + "Reward Shop")));
+        player.sendMessage(cb.create());
+    }
+
+    boolean onShop(Player player) {
+        Persistence.PlayerData data = plugin.persistence.getPlayerData(player);
+        if (!data.collectedAll) {
+            player.sendMessage(ChatColor.RED + "You haven't handed in all the masks yet!");
+            player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, SoundCategory.MASTER, 0.5f, 0.5f);
+            return true;
+        }
+        openShop(player);
+        return true;
+    }
+
+    void openShop(Player player) {
+        Gui gui = new Gui(plugin);
+        gui.size(9);
+        gui.title("Choose an Item");
+        List<Mytems> itemList = Arrays.asList(Mytems.DR_ACULA_STAFF,
+                                              Mytems.FLAME_SHIELD,
+                                              Mytems.STOMPERS,
+                                              Mytems.GHAST_BOW,
+                                              Mytems.BAT_MASK);
+        int slot = 0;
+        for (int i = 0; i < itemList.size(); i += 1) {
+            Mytems mytems = itemList.get(i);
+            ItemStack item = MytemsPlugin.getInstance().getMytem(mytems).getItem();
+            gui.setItem(slot, item, click -> {
+                    player.closeInventory();
+                    if (click.isShiftClick()) {
+                        return unlockItem(player, mytems, click);
+                    } else {
+                        player.sendMessage(ChatColor.RED + "Shift click to choose!");
+                        player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, SoundCategory.MASTER, 0.5f, 0.5f);
+                        return false;
+                    }
+                });
+            slot += 2;
+        }
+        gui.open(player);
+    }
+
+    private boolean unlockItem(Player player, Mytems mytems, InventoryClickEvent event) {
+        Persistence.PlayerData data = plugin.persistence.getPlayerData(player);
+        if (!data.collectedAll) return false;
+        data.collectedAll = false;
+        data.resetShown("Collector");
+        plugin.persistence.save();
+        ItemStack item = MytemsPlugin.getInstance().getMytem(mytems).getItem();
+        for (ItemStack drop : player.getInventory().addItem(item).values()) {
+            player.getWorld().dropItem(player.getEyeLocation(), drop).setPickupDelay(0);
+        }
+        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, SoundCategory.MASTER, 0.5f, 2.0f);
+        return true;
     }
 }

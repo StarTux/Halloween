@@ -37,12 +37,14 @@ public final class HalloweenPlugin extends JavaPlugin {
         masks.enable();
         halloweenListener = new HalloweenListener(this);
         getServer().getPluginManager().registerEvents(halloweenListener, this);
+        Gui.onEnable(this);
         collector = new Collector(this);
         getCommand("maskcollector").setExecutor(collector);
     }
 
     @Override
     public void onDisable() {
+        Gui.onDisable(this);
     }
 
     @Override

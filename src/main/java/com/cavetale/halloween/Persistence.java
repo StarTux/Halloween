@@ -42,6 +42,10 @@ final class Persistence {
             shown.add(Arrays.asList(maskId, npcName));
         }
 
+        void resetShown(String npcName) {
+            shown.removeIf(it -> it.get(1).equals(npcName));
+        }
+
         String rollMaskDrop(HalloweenPlugin pl) {
             String mask = null;
             long count = 0;

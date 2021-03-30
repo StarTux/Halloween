@@ -2,7 +2,7 @@ package com.cavetale.halloween;
 
 import com.cavetale.mytems.Mytems;
 import com.cavetale.mytems.MytemsPlugin;
-import com.cavetale.worldmarker.ItemMarker;
+import com.cavetale.worldmarker.item.ItemMarker;
 import com.winthier.generic_events.GenericEvents;
 import java.util.Arrays;
 import java.util.Collections;

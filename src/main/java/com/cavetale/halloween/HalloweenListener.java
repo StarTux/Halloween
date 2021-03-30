@@ -1,7 +1,7 @@
 package com.cavetale.halloween;
 
 import com.cavetale.dungeons.DungeonLootEvent;
-import com.cavetale.worldmarker.ItemMarker;
+import com.cavetale.worldmarker.item.ItemMarker;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;

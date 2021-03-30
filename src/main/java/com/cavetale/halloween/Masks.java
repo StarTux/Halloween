@@ -1,7 +1,7 @@
 package com.cavetale.halloween;
 
 import com.cavetale.dirty.Dirty;
-import com.cavetale.worldmarker.ItemMarker;
+import com.cavetale.worldmarker.item.ItemMarker;
 import com.google.gson.Gson;
 import java.io.File;
 import java.io.FileReader;

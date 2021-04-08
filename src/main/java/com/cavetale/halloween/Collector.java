@@ -1,7 +1,6 @@
 package com.cavetale.halloween;
 
 import com.cavetale.mytems.Mytems;
-import com.cavetale.mytems.MytemsPlugin;
 import com.cavetale.worldmarker.item.ItemMarker;
 import com.winthier.generic_events.GenericEvents;
 import java.util.Arrays;
@@ -193,7 +192,7 @@ final class Collector implements CommandExecutor {
         int slot = 0;
         for (int i = 0; i < itemList.size(); i += 1) {
             Mytems mytems = itemList.get(i);
-            ItemStack item = MytemsPlugin.getInstance().getMytem(mytems).getItem();
+            ItemStack item = mytems.createItemStack(player);
             gui.setItem(slot, item, click -> {
                     if (click.isShiftClick()) {
                         player.closeInventory();
@@ -215,7 +214,7 @@ final class Collector implements CommandExecutor {
         data.collectedAll = false;
         data.resetShown("Collector");
         plugin.persistence.save();
-        ItemStack item = MytemsPlugin.getInstance().getMytem(mytems).getItem();
+        ItemStack item = mytems.createItemStack(player);
         for (ItemStack drop : player.getInventory().addItem(item).values()) {
             player.getWorld().dropItem(player.getEyeLocation(), drop).setPickupDelay(0);
         }

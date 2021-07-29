@@ -1,8 +1,8 @@
 package com.cavetale.halloween;
 
+import com.cavetale.money.Money;
 import com.cavetale.mytems.Mytems;
 import com.cavetale.worldmarker.item.ItemMarker;
-import com.winthier.generic_events.GenericEvents;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -86,7 +86,7 @@ final class Collector implements CommandExecutor {
                 plugin.playJingle(player);
                 plugin.playTalking(player, player.getLocation(), 2);
             }
-            GenericEvents.givePlayerMoney(player.getUniqueId(), 500.0, plugin, mask.name + " mask sold to The Collector");
+            Money.give(player.getUniqueId(), 500.0, plugin, mask.name + " mask sold to The Collector");
             plugin.playEffect(player, player.getEyeLocation());
             showMaskList(player);
             return true;

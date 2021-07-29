@@ -1,11 +1,11 @@
 main: com.cavetale.halloween.HalloweenPlugin
 name: Halloween
 version: 0.1
-api-version: 1.13
+api-version: 1.17
 description: Halloween
 author: StarTux
 website: https://cavetale.com
-depend: [Dungeons, GenericEvents, Dirty, WorldMarker, Mytems]
+depend: [Dungeons, Dirty, WorldMarker, Mytems, Money]
 softdepend: []
 commands:
   halloween:

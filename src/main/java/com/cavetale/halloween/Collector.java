@@ -9,11 +9,14 @@ import java.util.List;
 import java.util.Random;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
+import net.kyori.adventure.text.JoinConfiguration;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -58,7 +61,8 @@ final class Collector implements CommandExecutor {
         if (data.didShow(mask.id, "Collector")) return true;
         if (!takeMask(player, mask)) {
             plugin.playFailSound(player, player.getLocation());
-            player.sendMessage(ChatColor.DARK_RED + "You don't have this mask in your inventory.");
+            player.sendMessage(Component.text("You don't have this mask in your inventory.",
+                                              NamedTextColor.DARK_RED));
             showMaskList(player);
             return true;
         } else {
@@ -78,11 +82,12 @@ final class Collector implements CommandExecutor {
             }
             plugin.persistence.save();
             if (complete) {
-                player.sendMessage(ChatColor.GOLD + "Finally, my collection is complete!!!");
+                player.sendMessage(Component.text("Finally, my collection is complete!!!",
+                                                  NamedTextColor.GOLD));
                 plugin.playCompleteSound(player);
                 plugin.playTalking(player, player.getLocation(), 8);
             } else {
-                player.sendMessage(ChatColor.GOLD + "Thank you.");
+                player.sendMessage(Component.text("Thank you.", NamedTextColor.GOLD));
                 plugin.playJingle(player);
                 plugin.playTalking(player, player.getLocation(), 2);
             }
@@ -101,7 +106,8 @@ final class Collector implements CommandExecutor {
             String maskName = plugin.masks.getMask(helmet);
             if (maskName == null) return true;
             if (playerData.didShow(maskName, treaterName)) {
-                player.sendMessage(ChatColor.LIGHT_PURPLE + "I hear there are more masks hidden in dungeons of the Mining World.");
+                player.sendMessage(Component.text("I hear there are more masks hidden in dungeons of the Mining World.",
+                                                  NamedTextColor.LIGHT_PURPLE));
             } else {
                 playerData.setShown(maskName, treaterName);
                 plugin.persistence.save();
@@ -113,8 +119,11 @@ final class Collector implements CommandExecutor {
                 plugin.playEffect(player, player.getEyeLocation());
             }
         } else {
-            player.sendMessage(ChatColor.LIGHT_PURPLE + "Rumor has it one can find the most awesome Halloween masks in dungeons of the Mining World.");
-            player.sendMessage(ChatColor.LIGHT_PURPLE + "You can find special dungeons by using your compass.");
+            player.sendMessage(Component.text("Rumor has it one can find the most awesome"
+                                              + " Halloween masks in dungeons of the Mining World.",
+                                              NamedTextColor.LIGHT_PURPLE));
+            player.sendMessage(Component.text("You can find special dungeons by using your compass.",
+                                              NamedTextColor.LIGHT_PURPLE));
         }
         return true;
     }
@@ -131,48 +140,57 @@ final class Collector implements CommandExecutor {
     }
 
     void showMaskList(Player player) {
-        List<ChatColor> colors = Arrays.asList(ChatColor.AQUA, ChatColor.BLUE, ChatColor.GOLD, ChatColor.GREEN,
-                                               ChatColor.LIGHT_PURPLE, ChatColor.RED, ChatColor.YELLOW);
+        List<NamedTextColor> colors = Arrays.asList(new NamedTextColor[] {
+                NamedTextColor.AQUA, NamedTextColor.BLUE,
+                NamedTextColor.GOLD, NamedTextColor.GREEN,
+                NamedTextColor.LIGHT_PURPLE, NamedTextColor.RED,
+                NamedTextColor.YELLOW,
+            });
         Collections.shuffle(colors, new Random(0));
-        ComponentBuilder cb = new ComponentBuilder("Masks").italic(true);
+        TextComponent.Builder cb = Component.text().content("Masks").decorate(TextDecoration.ITALIC);
         int colorI = 0;
         for (Masks.Mask mask: plugin.masks.maskConfig.masks) {
             boolean collected = plugin.persistence.getPlayerData(player).didShow(mask.id, "Collector");
-            cb.append(" ") .reset();
-            ChatColor maskColor = colors.get(colorI++ % colors.size());
+            cb.append(Component.space());
+            NamedTextColor maskColor = colors.get(colorI++ % colors.size());
             if (collected) {
-                cb.append(mask.name).color(maskColor).bold(true);
-                String tooltip = "" + maskColor + ChatColor.BOLD + mask.name
-                    + "\n" + ChatColor.GRAY + ChatColor.ITALIC + "You gave me this mask."
-                    + "\n" + ChatColor.GRAY + ChatColor.ITALIC + "Thank you!";
-                cb.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(tooltip)));
+                cb.append(Component.text(mask.name, maskColor, TextDecoration.BOLD));
+                Component tooltip = Component.join(JoinConfiguration.separator(Component.newline()), new ComponentLike[] {
+                        Component.text(mask.name, maskColor, TextDecoration.BOLD),
+                        Component.text("You gave me this mask.", NamedTextColor.GRAY, TextDecoration.ITALIC),
+                        Component.text("Thank you!", NamedTextColor.GRAY, TextDecoration.ITALIC),
+                    });
+                cb.hoverEvent(HoverEvent.showText(tooltip));
             } else {
-                cb.append("[" + mask.name + "]").color(ChatColor.GRAY);
-                cb.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/maskcollector collector " + mask.id));
-                String tooltip = maskColor + mask.name
-                    + "\n" + ChatColor.GRAY + ChatColor.ITALIC + "Give this mask to me. I will take good care of it, heehee!"
-                    + "\n" + ChatColor.DARK_RED + ChatColor.BOLD + "WARNING" + ChatColor.RED + " One such mask will be removed from your inventory!";
-                cb.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(tooltip)));
+                cb.append(Component.text("[" + mask.name + "]", NamedTextColor.GRAY));
+                cb.clickEvent(ClickEvent.runCommand("/maskcollector collector " + mask.id));
+                Component tooltip = Component.join(JoinConfiguration.separator(Component.newline()), new Component[] {
+                        Component.text(mask.name, maskColor),
+                        Component.text("Give this mask to me. I will take good care of it, heehee!",
+                                       NamedTextColor.GRAY, TextDecoration.ITALIC),
+                        Component.text("WARNING", NamedTextColor.DARK_RED, TextDecoration.BOLD)
+                        .append(Component.text(" One such mask will be removed from your inventory!", NamedTextColor.RED)),
+                    });
+                cb.hoverEvent(HoverEvent.showText(tooltip));
             }
         }
-        player.sendMessage(cb.create());
-        cb = new ComponentBuilder();
-        cb.append("Once completed:").color(ChatColor.WHITE).italic(true);
-        cb.append(" ").reset();
+        player.sendMessage(cb);
+        cb = Component.text();
+        cb.append(Component.text("Once completed: ", NamedTextColor.WHITE, TextDecoration.ITALIC));
         if (plugin.persistence.getPlayerData(player).collectedAll) {
-            cb.append("[Open Reward Shop]").color(ChatColor.GREEN).bold(true);
+            cb.append(Component.text("[Open Reward Shop]", NamedTextColor.GREEN, TextDecoration.BOLD));
         } else {
-            cb.append("[Open Reward Shop]").color(ChatColor.GRAY);
+            cb.append(Component.text("[Open Reward Shop]", NamedTextColor.GRAY));
         }
-        cb.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/maskcollector shop"));
-        cb.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(ChatColor.GRAY + "Reward Shop")));
-        player.sendMessage(cb.create());
+        cb.clickEvent(ClickEvent.runCommand("/maskcollector shop"));
+        cb.hoverEvent(HoverEvent.showText(Component.text("Reward Shop", NamedTextColor.GRAY)));
+        player.sendMessage(cb);
     }
 
     boolean onShop(Player player) {
         Persistence.PlayerData data = plugin.persistence.getPlayerData(player);
         if (!data.collectedAll) {
-            player.sendMessage(ChatColor.RED + "You haven't handed in all the masks yet!");
+            player.sendMessage(NamedTextColor.RED + "You haven't handed in all the masks yet!");
             player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, SoundCategory.MASTER, 0.5f, 0.5f);
             return true;
         }
@@ -183,7 +201,7 @@ final class Collector implements CommandExecutor {
     void openShop(Player player) {
         Gui gui = new Gui(plugin);
         gui.size(9);
-        gui.title("Choose an Item");
+        gui.title(Component.text("Choose an Item"));
         List<Mytems> itemList = Arrays.asList(Mytems.DR_ACULA_STAFF,
                                               Mytems.FLAME_SHIELD,
                                               Mytems.STOMPERS,
@@ -198,7 +216,7 @@ final class Collector implements CommandExecutor {
                         player.closeInventory();
                         return unlockItem(player, mytems, click);
                     } else {
-                        player.sendMessage(ChatColor.RED + "Shift click to choose!");
+                        player.sendMessage(Component.text("Shift click to choose!", NamedTextColor.RED));
                         player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, SoundCategory.MASTER, 0.5f, 0.5f);
                         return false;
                     }

@@ -7,13 +7,13 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import lombok.Data;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -85,15 +85,20 @@ public final class Masks {
         ItemStack item = Dirty.newCraftItemStack(Material.PLAYER_HEAD);
         Dirty.setItemTag(item, mask.tag);
         ItemMarker.setId(item, MASK_ITEM_ID);
-        List<String> lore = new ArrayList<>(maskConfig.lore);
-        if (owner != null) lore.add("" + ChatColor.GRAY + "Property of " + owner.getName() + ".");
+        List<Component> lore = new ArrayList<>();
+        for (String line : maskConfig.lore) {
+            lore.add(Component.text(line));
+        }
+        if (owner != null) {
+            lore.add(Component.text("Property of " + owner.getName(), NamedTextColor.GRAY));
+        }
         ItemMeta meta = item.getItemMeta();
         PersistentDataContainer tag = meta.getPersistentDataContainer();
         tag.set(maskId, PersistentDataType.STRING, mask.id);
         if (owner != null) {
             tag.set(ownerId, PersistentDataType.STRING, owner.getUniqueId().toString());
         }
-        meta.setLore(lore);
+        meta.lore(lore);
         item.setItemMeta(meta);
         return item;
     }
@@ -134,9 +139,9 @@ public final class Masks {
             item = Dirty.newCraftItemStack(Material.PUMPKIN_PIE);
         }
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(ChatColor.LIGHT_PURPLE + "Halloween Candy");
-        meta.setLore(Arrays.asList("Eat this delicious treat",
-                                   "for a magical effect."));
+        meta.displayName(Component.text("Halloween Candy", NamedTextColor.LIGHT_PURPLE));
+        meta.lore(List.of(Component.text("Eat this delicious treat"),
+                          Component.text("for a magical effect.")));
         item.setItemMeta(meta);
         ItemMarker.setId(item, "halloween:candy");
         return item;

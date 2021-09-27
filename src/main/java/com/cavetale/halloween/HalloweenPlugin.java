@@ -93,10 +93,10 @@ public final class HalloweenPlugin extends JavaPlugin {
                     e.setPersistent(true);
                     e.setBasePlate(false);
                     e.setArms(true);
-                    e.setHelmet(skull);
-                    e.setChestplate(makeBlack(Material.LEATHER_CHESTPLATE));
-                    e.setLeggings(makeBlack(Material.LEATHER_LEGGINGS));
-                    e.setBoots(makeBlack(Material.LEATHER_BOOTS));
+                    e.getEquipment().setHelmet(skull);
+                    e.getEquipment().setChestplate(makeBlack(Material.LEATHER_CHESTPLATE));
+                    e.getEquipment().setLeggings(makeBlack(Material.LEATHER_LEGGINGS));
+                    e.getEquipment().setBoots(makeBlack(Material.LEATHER_BOOTS));
                 });
             player.sendMessage("Spawned: " + name);
             return true;

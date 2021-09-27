@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
@@ -37,7 +38,7 @@ public final class Gui implements InventoryHolder {
     private Consumer<InventoryOpenEvent> onOpen = null;
     @Getter @Setter private boolean editable = false;
     @Getter private int size = 3 * 9;
-    @Getter private String title = "";
+    @Getter private Component title = Component.empty();
     boolean locked = false;
     // Ticking
     final List<Runnable> tickTasks = new ArrayList<>();
@@ -54,7 +55,7 @@ public final class Gui implements InventoryHolder {
         this.plugin = Objects.requireNonNull(plugin, "plugin=null");
     }
 
-    public Gui title(String newTitle) {
+    public Gui title(Component newTitle) {
         title = newTitle;
         return this;
     }
@@ -75,7 +76,6 @@ public final class Gui implements InventoryHolder {
 
     public Inventory getInventory() {
         if (inventory == null) {
-            if (title == null) title = "";
             inventory = Bukkit.getServer().createInventory(this, size, title);
             for (int i = 0; i < size; i += 1) {
                 Slot slot = slots.get(i);
